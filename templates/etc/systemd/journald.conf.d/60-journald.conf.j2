@@ -1,0 +1,17 @@
+# File created for CIS benchmark
+# CIS rule 6_1_1_1_2
+[Journal]
+{% if deb13cis_rule_6_1_1_1_4 %}
+# Set ForwardToSyslog CIS rule 6_1_1_1_4
+ForwardToSyslog=no
+{% endif %}
+
+{% if deb13cis_rule_6_1_1_1_5 %}
+# Set persistent storage CIS rule 6_1_1_1_5
+Storage=persistent
+{% endif %}
+
+{% if deb13cis_rule_6_1_1_1_6 %}
+# Set compress CIS rule 6_1_1_1_6
+Compress=yes
+{% endif %}

@@ -1,0 +1,74 @@
+---
+
+- name: "6.1.3.1 | PATCH | Ensure access to all logfiles has been configured"
+  when: deb13cis_rule_6_1_3_1
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - logfiles
+    - rule_6.1.3.1
+    - NIST800-53R5_AC-3
+    - NIST800-53R5_MP-2
+  block:
+    - name: "6.1.3.1 | AUDIT | Ensure access to all logfiles has been configured | find log files"
+      ansible.builtin.find:
+        path: /var/log/
+      changed_when: false
+      failed_when: false
+      register: discovered_logfiles
+
+    - name: "6.1.3.1 | PATCH | Ensure access to all logfiles has been configured | change matching files"
+      when: item is match("/var/log/((u|b|w)tmp*|lastlog|README)")
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        mode: 'ug-x,o-wx'
+        owner: root
+        group: "{{ 'root' if (item.gr_name == 'root') else 'utmp' if (item.gr_name == 'utmp') else 'root' }}"
+      failed_when: discovered_logfile_list.state not in '[ file, absent ]'
+      register: discovered_logfile_list
+      loop: "{{ discovered_logfiles.files }}"
+
+    - name: "6.1.3.1 | PATCH | Ensure access to all logfiles has been configured | change matching files"
+      when: item is match("/var/log/(cloud-init|localmessages|waagent)")
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        mode: 'u-x,go-wx'
+        owner: "{{ 'root' if (item.gr_name == 'root') else 'syslog' if (item.gr_name == 'syslog') else 'root' }}"
+        group: "{{ 'root' if (item.gr_name == 'root') else 'adm' if (item.gr_name == 'adm') else 'root' }}"
+      failed_when: discovered_logfile_list.state not in '[ file, absent ]'
+      register: discovered_logfile_list
+      loop: "{{ discovered_logfiles.files }}"
+
+    - name: "6.1.3.1 | PATCH | Ensure access to all logfiles has been configured | change matching files"
+      when: item is match("/var/log/(secure|auth|syslog|messages)")
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        mode: 'u-x,g-wx,o-rwx'
+        owner: "{{ 'root' if (item.gr_name == 'root') else 'syslog' if (item.gr_name == 'syslog') else 'root' }}"
+        group: "{{ 'root' if (item.gr_name == 'root') else 'adm' if (item.gr_name == 'adm') else 'root' }}"
+      failed_when: discovered_logfile_list.state not in '[ file, absent ]'
+      register: discovered_logfile_list
+      loop: "{{ discovered_logfiles.files }}"
+
+    - name: "6.1.3.1 | PATCH | Ensure access to all logfiles has been configured | change matching files"
+      when: item is match("/var/log/(journal)")
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        mode: 'u-x,g-wx,o-rwx'
+        owner: root
+        group: "{{ 'root' if (item.gr_name == 'root') else 'systemd-journal' if (item.gr_name == 'systemd-journal') else 'root' }}"
+      failed_when: discovered_logfile_list.state not in '[ file, absent ]'
+      register: discovered_logfile_list
+      loop: "{{ discovered_logfiles.files }}"
+
+    - name: "6.1.3.1 | PATCH | Ensure access to all logfiles has been configured | change files not matched others"
+      when: item is not match("/var/log/(journal|secure|auth|syslog|messages|cloud-init|localmessages|waagent|(u|b|w)tmp*|lastlog|README)")
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        mode: 'u-x,g-wx,o-rwx'
+        owner: "{{ 'root' if (item.gr_name == 'root') else 'syslog' if (item.gr_name == 'syslog') else 'root' }}"
+        group: "{{ 'root' if (item.gr_name == 'root') else 'systemd-journal' if (item.gr_name == 'systemd-journal') else 'adm' if (item.gr_name == 'adm') else 'utmp' if (item.gr_name == 'utmp') else 'root' }}" # noqa: yaml[line-length]
+      failed_when: discovered_logfile_list.state not in '[ file, absent ]'
+      register: discovered_logfile_list
+      loop: "{{ discovered_logfiles.files }}"

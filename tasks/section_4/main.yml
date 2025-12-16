@@ -1,0 +1,6 @@
+---
+
+- name: "SECTION | 4.1 | Configure UnComplicatedFirewall"
+  when: deb13cis_firewall_package == "ufw"
+  ansible.builtin.import_tasks:
+    file: cis_4.1.x.yml

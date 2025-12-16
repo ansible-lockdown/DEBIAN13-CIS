@@ -1,0 +1,18 @@
+---
+
+- name: "SECTION | 3.1.x | Configure Network Devices"
+  ansible.builtin.import_tasks:
+    file: cis_3.1.x.yml
+
+- name: "SECTION | 3.2.x | Configure Network Kernel Modules"
+  ansible.builtin.import_tasks:
+    file: cis_3.2.x.yml
+
+- name: "SECTION | 3.3.1.x | Configure Network Kernel Parameters IPv4"
+  ansible.builtin.import_tasks:
+    file: cis_3.3.1.x.yml
+
+- name: "SECTION | 3.3.2.x | Configure Network Kernel Parameters IPv6"
+  when: deb13cis_ipv6_required
+  ansible.builtin.import_tasks:
+    file: cis_3.3.2.x.yml

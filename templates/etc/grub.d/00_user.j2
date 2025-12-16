@@ -1,0 +1,8 @@
+## Ansible controlled file
+# Added as part of ansible-lockdown CIS baseline
+# provided by Mindpoint Group - A Tyto Athene Company
+
+cat <<EOF
+set superusers="{{ deb13cis_grub_user }}"
+password_pbkdf2 {{ deb13cis_grub_user }} {{ deb13cis_bootloader_password_hash }}
+EOF

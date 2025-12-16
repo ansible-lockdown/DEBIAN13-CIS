@@ -1,0 +1,121 @@
+---
+
+- name: "6.3.1 | PATCH | Ensure AIDE is installed"
+  when:
+    - deb13cis_rule_6_3_1
+    - deb13cis_config_aide
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_6.3.1
+    - aide
+  block:
+    - name: "6.3.1 | PATCH | Ensure AIDE is installed"
+      when:
+        - "'aide' not in ansible_facts.packages or
+          'aide-common' not in ansible_facts.packages"
+      ansible.builtin.package:
+        name: ['aide', 'aide-common']
+        state: present
+        update_cache: true
+      register: discovered_aide_pkgs_added
+
+    - name: "6.3.1 | PATCH | Ensure AIDE is installed | Recapture packages"
+      when: discovered_aide_pkgs_added.skipped is not defined
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: "6.3.1 | AUDIT | Ensure AIDE is installed | Check file exists"
+      ansible.builtin.stat:
+        path: "{{ deb13cis_aide_db_file }}"
+      register: discovered_aide_db_file
+
+    - name: "6.3.1 | AUDIT | Ensure AIDE is installed | Check current db file age"
+      when: discovered_aide_db_file.stat.exists
+      ansible.builtin.find:
+        path: "{{ deb13cis_aide_db_file | dirname }}"
+        pattern: "{{ deb13cis_aide_db_file | basename }}"
+        age: "{{ deb13cis_aide_db_file_age }}"
+      register: discovered_aide_db_age
+
+    - name: "6.3.1 | PATCH | Ensure AIDE is installed | Configure AIDE"
+      when:
+        - not ansible_check_mode
+        - not discovered_aide_db_file.stat.exists or
+          (discovered_aide_db_age.files | length > 0) or
+          deb13cis_aide_db_recreate
+      block:
+        - name: "6.3.1 | PATCH | Ensure AIDE is installed | Remove current db file"
+          ansible.builtin.file:
+            path: "{{ deb13cis_aide_db_file }}"
+            state: absent
+
+        - name: "6.3.1 | PATCH | Ensure AIDE is installed | Configure AIDE"
+          when: not ansible_check_mode
+          ansible.builtin.command: "{{ aide_initiate_command }}"
+          changed_when: true
+          args:
+            creates: "{{ deb13cis_aide_db_file }}"
+          async: "{{ deb13cis_aide_init_async }}"
+          poll: "{{ deb13cis_aide_init_poll }}"
+
+- name: "6.3.2 | PATCH | Ensure filesystem integrity is regularly checked"
+  when:
+    - deb13cis_rule_6_3_2
+    - not system_is_ec2
+  tags:
+    - level1-server
+    - level1-workstation
+    - aide
+    - file_integrity
+    - patch
+    - rule_6.3.2
+    - NIST800-53R5_AU-2
+  block:
+    - name: "6.3.2 | PATCH | Ensure filesystem integrity is regularly checked"
+      when: deb13cis_aide_scan == "cron"
+      ansible.builtin.cron:
+        name: Run AIDE integrity check
+        cron_file: "{{ deb13cis_aide_cron_file }}"
+        user: "{{ deb13cis_aide_cron_user }}"
+        minute: "{{ deb13cis_aide_cron_minute }}"
+        hour: "{{ deb13cis_aide_cron_hour }}"
+        day: "{{ deb13cis_aide_cron_day }}"
+        month: "{{ deb13cis_aide_cron_month }}"
+        weekday: "{{ deb13cis_aide_cron_weekday }}"
+        job: "{{ deb13cis_aide_cron_job }}"
+
+    - name: "6.3.2 | PATCH | Ensure filesystem integrity is regularly checked | aide service"
+      when: deb13cis_aide_scan == "timer"
+      ansible.builtin.systemd:
+        name: aidecheck.service
+        enabled: true
+
+    - name: "6.3.2 | PATCH | Ensure filesystem integrity is regularly checked | aide service"
+      when: deb13cis_aide_scan == "timer"
+      ansible.builtin.systemd:
+        name: aidecheck.timer
+        state: started
+        enabled: true
+
+- name: "6.3.3 | Ensure cryptographic mechanisms are used to protect the integrity of audit tools"
+  when: deb13cis_rule_6_3_3
+  tags:
+    - level1-server
+    - level1-workstation
+    - aide
+    - file_integrity
+    - patch
+    - rule_6.3.3
+    - NIST800-53R5_NA
+  ansible.builtin.blockinfile:
+    path: /etc/aide/aide.conf
+    marker: "# {mark} Audit tools - CIS benchmark - Ansible-lockdown"
+    block: |
+      /usr/sbin/auditctl p+i+n+u+g+s+b+acl+xattrs+sha512
+      /usr/sbin/auditd p+i+n+u+g+s+b+acl+xattrs+sha512
+      /usr/sbin/ausearch p+i+n+u+g+s+b+acl+xattrs+sha512
+      /usr/sbin/aureport p+i+n+u+g+s+b+acl+xattrs+sha512
+      /usr/sbin/augenrules p+i+n+u+g+s+b+acl+xattrs+sha512
+    validate: aide -D --config %s

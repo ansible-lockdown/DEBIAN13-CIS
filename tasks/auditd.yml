@@ -1,0 +1,77 @@
+---
+
+- name: "POST | AUDITD | Set supported_syscalls variable"
+  ansible.builtin.shell: ausyscall --dump |  awk  '{print $2}'
+  changed_when: false
+  check_mode: false
+  failed_when: discovered_auditd_syscalls.rc not in [ 0, 1 ]
+  register: discovered_auditd_syscalls
+
+- name: "POST | AUDITD | Ensure use of privileged commands is collected"
+  ansible.builtin.shell: |
+    {%- set egrep_exclude = "(asdfmnop|{{ deb13cis_priv_command_excluded_mounts | join('|') }})" -%}
+    for i in $(df | grep '^/dev' | grep -Ev '{{ egrep_exclude }}' | awk '{ print $NF }'); do
+      find $i -xdev -type f -perm /6000 2>/dev/null;
+    done
+  changed_when: false
+  failed_when: false
+  check_mode: false
+  register: discovered_privileged_commands
+
+- name: POST | AUDITD | Apply auditd template will for section 6.2.3.x - only required rules will be added | stat file
+  ansible.builtin.stat:
+    path: /etc/audit/rules.d/99_auditd.rules
+  register: discovered_auditd_rules_file
+
+- name: Auditd immutable check
+  ansible.builtin.command: grep -c "^-e 2" /etc/audit/rules.d/99_auditd.rules
+  changed_when: false
+  failed_when: discovered_auditd_immutable_check.rc not in [ 0, 1, 2 ]
+  register: discovered_auditd_immutable_check
+
+- name: Audit immutable fact
+  when: discovered_auditd_immutable_check.stdout == '1'
+  ansible.builtin.debug:
+    msg: "Reboot required for auditd to apply new rules as immutable set"
+  notify: Change_requires_reboot
+
+- name: POST | AUDITD | Apply auditd template will for section 6.2.3.x - only required rules will be added | setup file
+  vars:
+    supported_syscalls: "{{ discovered_auditd_syscalls.stdout_lines }}"
+  ansible.builtin.template:
+    src: etc/audit/rules.d/99_auditd.rules.j2
+    dest: /etc/audit/rules.d/99_auditd.rules
+    owner: root
+    group: root
+    mode: 'u-x,g-w,o-rwx'
+  diff: "{{ discovered_auditd_rules_file.stat.exists }}"  # Only run diff if not a new file
+  register: discovered_auditd_template_updated
+  notify:
+    - Restart auditd
+
+- name: POST | AUDITD | Add Warning count for changes to template file | Warn Count  # noqa no-handler
+  when:
+    - discovered_auditd_template_updated.changed
+    - discovered_auditd_rules_file.stat.exists
+  ansible.builtin.import_tasks:
+    file: warning_facts.yml
+  vars:
+    warn_control_id: 'Auditd template updated, see diff output for details'
+
+- name: POST | AUDITD | Apply auditd template for section 6.2.3.x - only required rules will be added | stat file
+  ansible.builtin.stat:
+    path: /etc/audit/rules.d/98_auditd_exceptions.rules
+  register: discovered_auditd_exception_file
+
+- name: POST | Set up auditd user logging exceptions | setup file
+  when:
+    - deb13cis_allow_auditd_uid_user_exclusions
+    - deb13cis_auditd_uid_exclude | length > 0
+  ansible.builtin.template:
+    src: audit/98_auditd_exception.rules.j2
+    dest: /etc/audit/rules.d/98_auditd_exceptions.rules
+    owner: root
+    group: root
+    mode: 'u-x,g-w,o-rwx'
+  diff: "{{ discovered_auditd_exception_file.stat.exists }}"
+  notify: Restart auditd

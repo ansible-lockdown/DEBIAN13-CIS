@@ -1,0 +1,70 @@
+---
+
+- name: "6.2.1.1 | PATCH | Ensure auditd packages are installed"
+  when: deb13cis_rule_6_2_1_1
+  tags:
+    - level2-server
+    - level2-workstation
+    - patch
+    - auditd
+    - rule_6.2.1.1
+    - NIST800-53R5_AU-2
+    - NIST800-53R5_AU-3
+    - NIST800-53R5_AU-12
+    - NIST800-53R5_SI-5
+  ansible.builtin.package:
+    name:
+      - auditd
+      - audispd-plugins
+    state: present
+
+- name: "6.2.1.2 | PATCH | Ensure auditd service is enabled and active"
+  when: deb13cis_rule_6_2_1_2
+  tags:
+    - level2-server
+    - level2-workstation
+    - patch
+    - auditd
+    - rule_6.2.1.2
+    - NIST800-53R5_AU-2
+    - NIST800-53R5_AU-12
+    - NIST800-53R5_SI-5
+  ansible.builtin.systemd:
+    name: auditd
+    state: started
+    enabled: true
+
+- name: "6.2.1.3 | PATCH | Ensure auditing for processes that start prior to auditd is enabled"
+  when: deb13cis_rule_6_2_1_3
+  tags:
+    - level2-server
+    - level2-workstation
+    - patch
+    - auditd
+    - grub
+    - rule_6.2.1.3
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX_DEFAULT="((?:(?!audit=\d).)*?)"$'
+    line: GRUB_CMDLINE_LINUX_DEFAULT="\1 audit=1"
+    backrefs: true
+  notify: Update-grub
+
+- name: "6.2.1.4 | PATCH | Ensure audit_backlog_limit is sufficient"
+  when: deb13cis_rule_6_2_1_4
+  tags:
+    - level2-server
+    - level2-workstation
+    - patch
+    - auditd
+    - grub
+    - rule_6.2.1.4
+    - NIST800-53R5_AU-2
+    - NIST800-53R5_AU-3
+    - NIST800-53R5_AU-12
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX_DEFAULT="((?:(?!audit_backlog_limit=\d+\b).)*?)"$'
+    line: GRUB_CMDLINE_LINUX_DEFAULT="\1 audit_backlog_limit={{ deb13cis_audit_back_log_limit }}"
+    backrefs: true
+  notify: Update-grub
