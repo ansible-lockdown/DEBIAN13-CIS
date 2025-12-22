@@ -64,12 +64,15 @@
     - NIST800-53R5_CM-7
   block:
     - name: "4.1.4 | PATCH | Ensure ufw outgoing default is configured |Added permitted rules"
+      when: deb13cis_ufw_allow_out_ports != "all"
       community.general.ufw:
         rule: allow
         direction: out
-        to_port: '{{ item }}'
-      with_items:
-        - "{{ deb13cis_ufw_allow_out_ports }}"
+        proto: "{{ item.proto }}"
+        to_port: '{{ item.port }}'
+      loop: "{{ deb13cis_ufw_allow_out_ports }}"
+      loop_control:
+        label: "{{ item.port }}"
       notify: Reload ufw
 
     - name: "4.1.4 | PATCH | Ensure ufw outgoing default is configured | Set outgoing default deny"
