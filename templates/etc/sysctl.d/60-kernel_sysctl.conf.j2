@@ -10,6 +10,11 @@ apparmor_restrict_unprivileged_unconfined is enabled = 1
 # CIS 1.5.3
 kernel.yama.ptrace_scope = 1
 {% endif %}
+{% if deb13cis_rule_1_5_5 %}
+# Ptrace scope
+# CIS 1.5.5
+kernel.dmesg_restrict = 1
+{% endif %}
 {% if deb13cis_rule_1_5_8 %}
 # kernel.kptr_restrict
 # CIS 1.5.8

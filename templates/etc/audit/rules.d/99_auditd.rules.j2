@@ -5,8 +5,8 @@
 
 # This template will set all of the auditd configurations via a handler in the role in one task instead of individually
 {% if deb13cis_rule_6_2_3_1 %}
--w /etc/sudoers -p wa -k scope
--w /etc/sudoers.d -p wa -k scope
+-a always,exit -F arch=b64 -S all -F path=/etc/sudoers -F perm=wa -k scope
+-a always,exit -F arch=b64 -S all -F dir=/etc/sudoers.d -F perm=wa -k scope
 {% endif %}
 {% if deb13cis_rule_6_2_3_2 %}
 {% set syscalls = ["execve"] %}
@@ -20,8 +20,7 @@
 {% set syscalls = ["adjtimex","settimeofday"] %}
 {% set arch_syscalls = syscalls | select("in", supported_syscalls) | list %}
 -a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -k time-change
--a always,exit -S clock_settime -F a0=0x0 -k time-change
--w /etc/localtime -p wa -k time-change
+-a always,exit -F arch=b64 -S clock_settime -F a0=0x0 -k time-change
 {% endif %}
 {% if deb13cis_rule_6_2_3_5 %}
 {% set syscalls = ["sethostname","setdomainname"] %}
@@ -40,7 +39,7 @@
 -a always,exit -F arch=b64 -S all -F path=/etc/network/interfaces -F perm=wa -k system-locale
 -a always,exit -F arch=b64 -S all -F dir=/etc/network/interfaces.d -F perm=wa -k system-locale
 {% if '/etc/netplan' is exists %}
--a always,exit -F arch=b64 -S all -F dir=/etc/netplan -F perm=wa -k system-locale
+-a always,exit -F arch=b64 -S all -F dir=/etc/netplan/ -F perm=wa -k system-locale
 {% else %}
 ## following commented out as path not present when checked
 # -a always,exit -F arch=b64 -S all -F dir=/etc/netplan -F perm=wa -k system-locale
@@ -87,16 +86,14 @@
 -a always,exit -F arch=b64 -S all -F path=/etc/pam.conf -F perm=wa -k identity
 -a always,exit -F arch=b64 -S all -F dir=/etc/pam.d -F perm=wa -k identity
 {% endif %}
-
 {% if deb13cis_rule_6_2_3_18 %}
 {% set syscalls = ["chmod","fchmod","fchmodat","fchmodat2"] %}
--a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F auid>={{ prelim_min_int_uid }} -F auid!=-1 -k perm_mod
-{% endif %}
-{% if deb13cis_rule_6_2_3_19 %}
 {% set arch_syscalls = syscalls | select("in", supported_syscalls) | list %}
 -a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k perm_mod
-{% set syscalls = ["chown","fchown","lchown","fchownat"] %}
-{% set arch_syscalls = syscalls | select("in", supported_syscalls) | list %}
+{% endif %}
+{% if deb13cis_rule_6_2_3_19 %}
+{% set syscalls = syscalls | select("in", supported_syscalls) | list %}
+{% set arch_syscalls = ["chown","fchown","lchown","fchownat"] %}
 -a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k perm_mod
 {% endif %}
 {% if deb13cis_rule_6_2_3_20 %}
@@ -133,22 +130,22 @@
 -a always,exit -F arch=b64 -S all -F dir=/etc/apparmor.d -F perm=wa -k MAC-policy
 {% endif %}
 {% if deb13cis_rule_6_2_3_27 %}
--a always,exit -F path=/usr/bin/chcon -F perm=x -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k perm_chng
+-a always,exit -F arch=b64 -S all -F path=/usr/bin/chcon -F perm=x -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k perm_chng
 {% endif %}
 {% if deb13cis_rule_6_2_3_28 %}
--a always,exit -F path=/usr/bin/setfacl -F perm=x -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k perm_chng
+-a always,exit -F arch=b64 -S all -F path=/usr/bin/setfacl -F perm=x -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k perm_chng
 {% endif %}
 {% if deb13cis_rule_6_2_3_29 %}
--a always,exit -F path=/usr/bin/chacl -F perm=x -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k perm_chng
+-a always,exit -F arch=b64 -S all -F path=/usr/bin/chacl -F perm=x -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k perm_chng
 {% endif %}
 {% if deb13cis_rule_6_2_3_30 %}
--a always,exit -F path=/usr/sbin/usermod -F perm=x -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k usermod
+-a always,exit -F arch=b64 -S all -F path=/usr/sbin/usermod -F perm=x -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k usermod
 {% endif %}
 {% if deb13cis_rule_6_2_3_31 %}
 -a always,exit -F arch=b64 -S all -F path=/usr/bin/kmod -F perm=x -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k kernel_modules
 {% endif %}
 {% if deb13cis_rule_6_2_3_32 %}
-{% set syscalls = ["init_module","finit_module","delete_module"] %}
+{% set syscalls = ["init_module","finit_module"] %}
 {% set arch_syscalls = syscalls | select("in", supported_syscalls) | list %}
 -a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F auid>={{ prelim_min_int_uid }} -F auid!=-1 -k kernel_modules
 {% endif %}

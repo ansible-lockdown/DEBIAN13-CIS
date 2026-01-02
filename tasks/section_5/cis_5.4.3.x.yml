@@ -50,10 +50,21 @@
     - rule_5.4.3.3
     - NIST800-53R5_AC-3
     - NIST800-53R5_MP-2
-  ansible.builtin.replace:
-    path: "{{ item.path }}"
-    regexp: (?i)(umask\s+\d+)
-    replace: '{{ item.line }} {{ deb13cis_bash_umask }}'
-  loop:
-    - { path: '/etc/profile', line: 'umask' }
-    - { path: '/etc/login.defs', line: 'UMASK' }
+  block:
+    - name: "5.4.3.3 | PATCH | Ensure default user umask is configured | replace"
+      ansible.builtin.replace:
+        path: "{{ item.path }}"
+        regexp: (?i)(umask\s+\d+)
+        replace: '{{ item.line }} {{ deb13cis_bash_umask }}'
+      loop:
+        - { path: '/etc/profile', line: 'umask' }
+        - { path: '/etc/login.defs', line: 'UMASK' }
+
+    - name: "5.4.3.3 | PATCH | Ensure default user umask is configured | add"
+      ansible.builtin.lineinfile:
+        path: "{{ item.path }}"
+        regexp: (?i)(umask\s+\d+)
+        line: '{{ item.line }} {{ deb13cis_bash_umask }}'
+      loop:
+        - { path: '/etc/profile', line: 'umask' }
+        - { path: '/etc/login.defs', line: 'UMASK' }
