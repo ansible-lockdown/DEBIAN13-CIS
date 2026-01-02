@@ -1,5 +1,5 @@
 ---
-# defaults file for DEBIAN12-CIS
+# defaults file for DEBIAN13-CIS
 # WARNING:
 # These values may be overridden by other vars-setting options(e.g. like the below 'container_vars_file'), as explained here:
 # https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable
@@ -40,9 +40,9 @@ deb13cis_legacy_boot: false
 ## Benchmark name used by auditing control role
 # The audit variable found at the base
 ## metadata for Audit benchmark
-benchmark_version: '1.1.0'
+benchmark_version: '1.0.0'
 
-benchmark: DEBIAN12-CIS
+benchmark: DEBIAN13-CIS
 
 # Whether to skip the system reboot before audit
 # System will reboot if false, can give better audit results
@@ -96,7 +96,7 @@ audit_content: git
 # If using either archive, copy, get_url:
 ## Note will work with .tar files - zip will require extra configuration
 ### If using get_url this is expecting github url in tar.gz format e.g.
-### https://github.com/ansible-lockdown/DEBIAN12-CIS-Audit/archive/refs/heads/benchmark-v1.0.0.tar.gz
+### https://github.com/ansible-lockdown/DEBIAN13-CIS-Audit/archive/refs/heads/benchmark-v1.0.0.tar.gz
 audit_conf_source: "some path or url to copy from"
 
 # Destination for the audit content to be placed on managed node
@@ -710,7 +710,7 @@ deb13cis_ftp_client: false
 ## Control 2.3.1.1
 # This variable choses the tool used for time synchronization
 # The two options are `chrony`and `systemd-timesyncd`.
-deb13cis_time_sync_tool: "systemd-timesyncd"
+deb13cis_time_sync_tool: "chrony"
 
 ## Controls 2.3.x - Configure time pools & servers for chrony and timesyncd
 # The following variable represents a list of of time server pools used

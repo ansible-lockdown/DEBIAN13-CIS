@@ -1,6 +1,6 @@
 ---
 
-# vars file for DEB12-CIS
+# vars file for DEB13-CIS
 min_ansible_version: 2.14.1
 deb13cis_allowed_crypto_policies:
   - 'DEFAULT'

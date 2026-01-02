@@ -1,5 +1,5 @@
 ---
-# tasks file for DEB12-CIS
+# tasks file for DEB13-CIS
 
 - name: "Check OS version and family"
   when: os_check
