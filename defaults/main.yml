@@ -910,11 +910,6 @@ deb13cis_sshd_max_sessions: 8
 # This is set
 deb13cis_sshd_maxstartups: "10:30:60"
 
-## Control 5.2.1
-# This variable represents the name of the sudo package to install
-# CIS recommends `sudo` or, if LDAP functionality is required, `sudo-ldap`.
-deb13cis_sudo_package: "sudo"
-
 ## Control 5.2.3
 # This variable defines the path and file name of the sudo log file.
 deb13cis_sudolog_location: "/var/log/sudo.log"
@@ -1295,9 +1290,6 @@ deb13cis_auditd_disk_error_action: syslog
 deb13cis_auditd_space_left_action: email
 deb13cis_auditd_admin_space_left_action: halt
 
-# This value governs if the below extra-vars for auditd should be used by the role
-deb13cis_auditd_extra_conf_usage: false
-
 # 6.2.3.x allow exceptions for UID in auditd config
 ## Advanced option found in auditd post
 # This variable governs if defining user exceptions for auditd logging is acceptable.
@@ -1306,6 +1298,8 @@ deb13cis_allow_auditd_uid_user_exclusions: false
 deb13cis_auditd_uid_exclude:
   - 1999
 
+# This value governs if the below extra-vars for auditd should be used by the role
+deb13cis_auditd_extra_conf_usage: false
 # This can be used to configure other keys in auditd.conf
 # Example:
 deb13cis_auditd_extra_conf:
