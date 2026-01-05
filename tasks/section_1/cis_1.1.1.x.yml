@@ -349,7 +349,7 @@
           - "Removing UAS may cause performance issues or prevent certain USB devices from functioning correctly."
           - "UAS provides higher speeds and better I/O performance compared to traditional USB mass storage."
           - "Ensure that this action is intentional and consider testing on non-critical systems before applying in production."
-          - "Please review your setting for variable debian12cis_uas_remove and make sure it is set to true."
+          - "Please review your setting for variable debian13cis_uas_remove and make sure it is set to true."
           - "And rerun the Ansible playbook to properly remove usb_storage."
 
     - name: "1.1.1.10 | WARN | Ensure usb-storage kernel module is not available | Increment Warning Count"

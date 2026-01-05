@@ -1,5 +1,5 @@
 ---
-# handlers file for DEB12-CIS
+# handlers file for DEB13-CIS
 
 - name: "Adding options for /tmp"
   when: not deb13cis_tmp_svc
