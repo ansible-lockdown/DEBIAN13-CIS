@@ -9,6 +9,11 @@ tests/Dockerfile
 packer_cache
 delete*
 ignore*
+qa_report.md
+prompt.md
+plan.md
+history.md
+*.pdf
 # VSCode
 .vscode
 vagrant
@@ -44,5 +49,5 @@ benchparse/
 # GitHub Action/Workflow files
 .github/
 
-# ansible-lint
-.ansible
+# ansible-lint cache
+.ansible/
