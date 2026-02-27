@@ -22,7 +22,7 @@
       register: discovered_tmp_mount
 
     - name: "1.1.2.1.1 | PATCH | Ensure /tmp is tmpfs or a separate partition | Absent"
-      when: discovered_tmp_mount is undefined
+      when: discovered_tmp_mount is undefined or discovered_tmp_mount.stdout_lines == []
       ansible.builtin.debug:
         msg: "Warning!! {{ mount_point }} is not a separate partition"
 
