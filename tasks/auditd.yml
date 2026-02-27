@@ -11,7 +11,7 @@
 
 - name: "POST | AUDITD | Ensure use of privileged commands is collected"
   ansible.builtin.shell: |
-    {%- set egrep_exclude = "(asdfmnop|{{ ubtu24cis_priv_command_excluded_mounts | join('|') }})" -%}
+    {%- set egrep_exclude = "(asdfmnop|{{ deb13cis_priv_command_excluded_mounts | join('|') }})" -%}
     for i in $(df | grep '^/dev' | grep -Ev '{{ egrep_exclude }}' | awk '{ print $NF }'); do
       find $i -xdev -type f -perm /6000 2>/dev/null;
     done
@@ -25,7 +25,7 @@
   vars:
     supported_syscalls: "{{ discovered_auditd_syscalls.stdout_lines }}"
   ansible.builtin.template:
-    src: audit/99_auditd.rules.j2
+    src: etc/audit/rules.d/99_auditd.rules.j2
     dest: /etc/audit/rules.d/99_auditd.rules
     owner: root
     group: root
@@ -38,7 +38,7 @@
     - Set_reboot_required
 
 - name: POST | AUDITD | Set up auditd user logging exceptions
-  when: ubtu24cis_allow_auditd_uid_user_exclusions
+  when: deb13cis_allow_auditd_uid_user_exclusions
   ansible.builtin.template:
     src: audit/98_auditd_exception.rules.j2
     dest: /etc/audit/rules.d/98_auditd_exceptions.rules
