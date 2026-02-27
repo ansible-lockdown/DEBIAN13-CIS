@@ -482,14 +482,14 @@
   tags:
     - level2-server
     - level2-workstation
-    - manual
+    - scored
     - patch
-    - auditd
     - rule_6.2.3.37
     - NIST800-53R5_AU-3
-  ansible.builtin.debug:
-    msg:
-      - "Please run augenrules --load if you suspect there is a configuration that is not active"
+    - auditd
+  ansible.builtin.command: augenrules --check
+  changed_when: false
+  register: discovered_augenrules_check
 
 - name: Auditd | 6.2.3.x | Auditd controls updated
   when: update_audit_template

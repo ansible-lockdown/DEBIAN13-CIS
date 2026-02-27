@@ -20,6 +20,12 @@
   check_mode: false
   register: discovered_privileged_commands
 
+- name: "POST | AUDITD | Check if auditd is immutable before changes"
+  ansible.builtin.shell: auditctl -s | grep "enabled 2"
+  changed_when: false
+  failed_when: discovered_auditd_immutable_check.rc not in [ 0, 1 ]
+  register: discovered_auditd_immutable_check
+
 - name: "POST | AUDITD | Apply auditd template for section 6.2.4.x"
   when: update_audit_template
   vars:
@@ -35,7 +41,6 @@
     - Auditd rules reload
     - Audit_immutable_fact
     - Restart auditd
-    - Set_reboot_required
 
 - name: POST | AUDITD | Set up auditd user logging exceptions
   when: deb13cis_allow_auditd_uid_user_exclusions

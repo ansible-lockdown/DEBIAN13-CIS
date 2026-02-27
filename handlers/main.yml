@@ -240,7 +240,7 @@
   changed_when: true
 
 - name: Auditd rules reload
-  when: discovered_augenrules_check.stdout is search('No change') or prelim_auditd_immutable_check.rc == 1
+  when: discovered_augenrules_check.stdout is search('No change') or discovered_auditd_immutable_check.rc == 1
   ansible.builtin.command: augenrules --load
   changed_when: true
   failed_when: discovered_augenrule_load.rc not in [ 0, 1 ]
@@ -249,10 +249,10 @@
 - name: Audit_immutable_fact
   when:
     - discovered_audit_rules_updated.changed
-    - auditd_immutable_check is defined
+    - discovered_auditd_immutable_check is defined
   ansible.builtin.debug:
     msg: "Reboot required for auditd to apply new rules as immutable set"
-  notify: Set_reboot_required
+  notify: Change_requires_reboot
 
 - name: Stop auditd process
   ansible.builtin.command: systemctl kill auditd
