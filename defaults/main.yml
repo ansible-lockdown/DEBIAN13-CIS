@@ -1225,6 +1225,10 @@ deb13cis_remote_log_retrycount: 100
 # of rsyslog forwarding must be enabled('deb13cis_remote_log_server: true').
 deb13cis_remote_log_queuesize: 1000
 
+# This variable sets the daily, weekly, monthly, yearly value for the log rotation.
+# To conform to CIS standards this just needs to comply with your site policy
+deb13cis_logrotate: "daily"
+
 ## 6.1.2.10 & 6.2.1.11 rsyslog tls
 # These values are required to be set in order to configure correctly
 # StreamDriver must be set to gtls to enable TLS for encrypting syslog traffic.
