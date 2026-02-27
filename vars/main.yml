@@ -2,26 +2,6 @@
 
 # vars file for DEB13-CIS
 min_ansible_version: 2.14.1
-deb13cis_allowed_crypto_policies:
-  - 'DEFAULT'
-  - 'FUTURE'
-  - 'FIPS'
-
-# Following is left blank for ability to build string
-deb13cis_crypto_policy_module: ''
-
-# Do not adjust these are recognized as part of the CIS benchmark and used during testing
-# Recognized by CIS as possible extra options
-deb13cis_allowed_crypto_policies_modules:
-  - 'OSPP'
-  - 'AD-SUPPORT'
-  - 'AD-SUPPORT-LEGACY'
-  # The following are already included in controls
-  - 'NO-SHA1'
-  - 'NO-SSHCBC'
-  - 'NO-SSHWEAKCIPHER'
-  - 'NO-SSHWEAKMAC'
-  - 'NO-WEAKMAC'
 
 # Used to control warning summary
 warn_control_list: ""
@@ -29,8 +9,6 @@ warn_count: 0
 
 # list of dicts of interactive users, filled in during prelim.yml
 prelim_interactive_users: []
-
-gpg_key_package: "{{ ansible_facts.distribution | lower }}-gpg-keys"
 
 ## Control 6.3.3.x - Audit template
 # This variable governs if the auditd logic should be executed(if value is true).
