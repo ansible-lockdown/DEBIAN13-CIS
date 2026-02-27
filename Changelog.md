@@ -12,5 +12,6 @@
 - 2.1.22 fixed typo
 - 5.1.4 var naming
 - sshd vars alignment
+- 2.4.1.9 - added ability to add users to cron
 
 # 1.0.0 Initial

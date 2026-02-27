@@ -743,6 +743,11 @@ deb13cis_time_servers:
 # This will also purge any packages not removed via this playbook
 deb13cis_purge_apt: false
 
+## 2.4.1.x
+### 2.4.1.9
+# List of users, allowed to use cron
+deb13cis_cron_allow_users: []
+
 ## Section 3 vars
 ## Sysctl
 # Service configuration
