@@ -14,6 +14,7 @@
 - sshd vars alignment
 - 2.4.1.9 - added ability to add users to cron
 - 6.2.4.9 - removed group name
+- 5.3.3.1.x - added owner/perms
 - 5.3.3.3.x logic improvements
 
 # 1.0.0 Initial
