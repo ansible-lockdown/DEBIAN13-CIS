@@ -16,6 +16,9 @@
 - 5.1.4 var naming
 - 5.3.3.1.x - added owner/perms
 - 5.3.3.3.x logic improvements
+- 5.4.1.x - improve tests
+- 5.4.2.x - improve tests
+- 5.4.3.x - improve tests
 - 5.4.2.5 added missing echo
 - 6.2.4.9 - removed group name
 
