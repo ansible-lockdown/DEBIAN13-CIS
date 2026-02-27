@@ -136,7 +136,7 @@
       ansible.builtin.lineinfile:
         path: "{{ deb13cis_sshd_config_file }}"
         regexp: "^DenyGroups"
-        line: DenyGroups {{ deb13cis_sshd_denygroups }}
+        line: DenyGroups {{ deb13cis_sshd_deny_groups }}
         insertbefore: ^(Include|Match)
       notify: Restart sshd
 
