@@ -50,9 +50,7 @@
         - not deb13cis_avahi_server
         - not deb13cis_avahi_mask
       ansible.builtin.package:
-        name:
-          - avahi-autoipd
-          - avahi
+        name: avahi-daemon
         state: absent
         purge: "{{ deb13cis_purge_apt }}"
         lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
