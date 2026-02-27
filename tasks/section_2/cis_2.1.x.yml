@@ -713,11 +713,11 @@
     purge: "{{ deb13cis_purge_apt }}"
     lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
-- name: "2.1.21 | PATCH | Ensure mail transfer agents are configured for local-only mode"
+- name: "2.1.22 | PATCH | Ensure mail transfer agents are configured for local-only mode"
   when:
     - not deb13cis_is_mail_server
     - "'postfix' in ansible_facts.packages"
-    - deb13cis_rule_2_1_21
+    - deb13cis_rule_2_1_22
   tags:
     - level1-server
     - level1-workstation
@@ -725,7 +725,7 @@
     - patch
     - postfix
     - NIST800-53R5_CM-7
-    - rule_2.1.21
+    - rule_2.1.22
   notify: Restart postfix
   ansible.builtin.lineinfile:
     path: /etc/postfix/main.cf
