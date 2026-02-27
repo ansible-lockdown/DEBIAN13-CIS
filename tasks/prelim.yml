@@ -68,10 +68,10 @@
     file: parse_etc_password.yml
 
 - name: "PRELIM | PATCH | Ensure libselinux1 is installed"
-  when: '"libselinux1" not in ansible_facts.packages'
   ansible.builtin.package:
     name: libselinux1
     state: present
+    lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
 - name: PRELIM | AUDIT | Section 1.1 | Create list of mount points
   tags: always
@@ -140,6 +140,7 @@
   ansible.builtin.package:
     name: cron
     state: present
+    lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
 - name: "PRELIM | AUDIT | Wireless adapter pre-requisites"
   when:
@@ -244,11 +245,17 @@
     state: directory
     mode: 'u+x,go-w'
 
+- name: "PRELIM | AUDIT | Check if auditd is immutable before changes"
+  when: "'auditd' in ansible_facts.packages"
+  tags: always
+  ansible.builtin.shell: auditctl -s | grep "enabled 2"
+  changed_when: false
+  failed_when: prelim_auditd_immutable_check.rc not in [ 0, 1 ]
+  register: prelim_auditd_immutable_check
+
 # Carry out here to ensure conf file etc exist
 - name: "PRELIM | PATCH | Configure System Accounting (auditd)"
-  when:
-    - '"auditd" not in ansible_facts.packages'
-    - deb13cis_rule_6_2_3_1
+  when: deb13cis_rule_6_2_3_1
   tags:
     - level2-server
     - level2-workstation
@@ -258,6 +265,7 @@
   ansible.builtin.package:
     name: auditd
     state: present
+    lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
   become: true
 
 - name: "PRELIM | AUDIT | Discover audit logfile"
