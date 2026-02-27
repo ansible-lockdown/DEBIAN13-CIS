@@ -656,11 +656,11 @@ deb13cis_ssh_weak_kex:
 
 deb13cis_sshd_config_file: /etc/ssh/sshd_config
 
-## 5.1.4 Note the following to understand precedence and layout , comma seperated
-deb13cis_sshd_allowusers: {{ deb13cis_sshd_allow_users }}
-deb13cis_sshd_allowgroups: {{ deb13cis_sshd_allow_groups }}
-deb13cis_sshd_denyusers: {{ deb13cis_sshd_deny_users }}
-deb13cis_sshd_denygroups: {{ deb13cis_sshd_deny_groups }}
+## 5.1.4 Note the following to understand precedence and layout , comma separated
+deb13cis_sshd_allow_users: {{ deb13cis_sshd_allow_users }}
+deb13cis_sshd_allow_groups: {{ deb13cis_sshd_allow_groups }}
+deb13cis_sshd_deny_users: {{ deb13cis_sshd_deny_users }}
+deb13cis_sshd_deny_groups: {{ deb13cis_sshd_deny_groups }}
 
 deb13cis_ssh_clientaliveinterval: {{ deb13cis_sshd_client_alive_interval }}
 deb13cis_ssh_clientalivecountmax: {{ deb13cis_sshd_client_alive_count_max }}

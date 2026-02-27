@@ -105,34 +105,34 @@
     - rule_5.1.4
   block:
     - name: "5.1.4 | PATCH | Ensure SSH access is configured | Add line to sshd_config for allowusers"
-      when: "deb13cis_sshd_allowusers | length > 0"
+      when: "deb13cis_sshd_allow_users | length > 0"
       ansible.builtin.lineinfile:
         path: "{{ deb13cis_sshd_config_file }}"
         regexp: "^AllowUsers"
-        line: AllowUsers {{ deb13cis_sshd_allowusers }}
+        line: AllowUsers {{ deb13cis_sshd_allow_users }}
         insertbefore: ^(Include|Match)
       notify: Restart sshd
 
     - name: "5.1.4 | PATCH | Ensure SSH access is configured | Add line to sshd_config for allowgroups"
-      when: "deb13cis_sshd_allowgroups | length > 0"
+      when: "deb13cis_sshd_allow_groups | length > 0"
       ansible.builtin.lineinfile:
         path: "{{ deb13cis_sshd_config_file }}"
         regexp: "^AllowGroups"
-        line: AllowGroups {{ deb13cis_sshd_allowgroups }}
+        line: AllowGroups {{ deb13cis_sshd_allow_groups }}
         insertbefore: ^(Include|Match)
       notify: Restart sshd
 
     - name: "5.1.4 | PATCH | Ensure SSH access is configured | Add line to sshd_config for denyusers"
-      when: "deb13cis_sshd_denyusers | length > 0"
+      when: "deb13cis_sshd_deny_users | length > 0"
       ansible.builtin.lineinfile:
         path: "{{ deb13cis_sshd_config_file }}"
         regexp: "^DenyUsers"
-        line: DenyUsers {{ deb13cis_sshd_denyusers }}
+        line: DenyUsers {{ deb13cis_sshd_deny_users }}
         insertbefore: ^(Include|Match)
       notify: Restart sshd
 
     - name: "5.1.4 | PATCH | Ensure SSH access is configured | Add line to sshd_config for denygroups"
-      when: "deb13cis_sshd_denygroups | length > 0"
+      when: "deb13cis_sshd_deny_groups | length > 0"
       ansible.builtin.lineinfile:
         path: "{{ deb13cis_sshd_config_file }}"
         regexp: "^DenyGroups"
