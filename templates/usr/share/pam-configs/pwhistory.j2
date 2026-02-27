@@ -3,4 +3,4 @@ Default: yes
 Priority: 1024
 Password-Type: Primary
 Password:
-        requisite                       pam_pwhistory.so enforce_for_root try_first_pass{% if deb13cis_rule_5_3_3_3_1 %} remember={{ deb13cis_pamd_pwhistory_remember }}{% endif %}{% if deb13cis_rule_5_3_3_3_2 %} enforce_for_root{% endif %}{% if deb13cis_rule_5_3_3_3_3 %} use_authtok{% endif %}
+        requisite                       pam_pwhistory.so {% if deb13cis_rule_5_3_3_3_1 %} remember={{ deb13cis_pamd_pwhistory_remember }}{% endif %}{% if deb13cis_rule_5_3_3_3_2 %} enforce_for_root{% endif %}{% if deb13cis_rule_5_3_3_3_3 %} use_authtok{% endif %}
