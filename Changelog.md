@@ -1,3 +1,25 @@
 # Changes to deb13CIS
 
+
+# Alignment and QA
+- Align with new standards and changes
+- company naming
+- linting
+- var naming tidy up
+- apt lockout added to package tasks
+- unique var naming
+- sshd vars alignment
+- 1.2.1.2.x updated logic on mount test
+- 2.1.2 fixed app naming
+- 2.1.22 fixed typo
+- 2.4.1.9 - added ability to add users to cron
+- 5.1.4 var naming
+- 5.3.3.1.x - added owner/perms
+- 5.3.3.3.x logic improvements
+- 5.4.1.x - improve tests
+- 5.4.2.x - improve tests
+- 5.4.3.x - improve tests
+- 5.4.2.5 added missing echo
+- 6.2.4.9 - removed group name
+
 # 1.0.0 Initial

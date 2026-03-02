@@ -102,8 +102,20 @@
     - rule_6.2.3.8
     - NIST800-53R5_AU-3
     - NIST800-53R5_CM-6
-  ansible.builtin.set_fact:
-    update_audit_template: true
+  block:
+    - name: "6.2.3.8 | PATCH | Ensure events that modify the system's network environment are collected"
+      ansible.builtin.stat:
+        path: /etc/network/interfaces.d
+      register: discovered_interfaces_d_stat
+
+    - name: "6.2.3.8 | PATCH | Ensure events that modify the system's network environment are collected"
+      ansible.builtin.stat:
+        path: /etc/netplan
+      register: discovered_netplan_stat
+
+    - name: "6.2.3.8 | PATCH | Ensure events that modify the system's network environment are collected"
+      ansible.builtin.set_fact:
+        update_audit_template: true
 
 - name: "6.2.3.9 | PATCH | Ensure events that modify /etc/NetworkManager directory are collected"
   when: deb13cis_rule_6_2_3_9
@@ -115,8 +127,15 @@
     - rule_6.2.3.9
     - NIST800-53R5_AU-3
     - NIST800-53R5_CM-6
-  ansible.builtin.set_fact:
-    update_audit_template: true
+  block:
+    - name: "6.2.3.9 | PATCH | Ensure events that modify the system's network environment are collected"
+      ansible.builtin.stat:
+        path: /etc/NetworkManager
+      register: discovered_network_manager_stat
+
+    - name: "6.2.3.9 | PATCH | Ensure events that modify the system's network environment are collected"
+      ansible.builtin.set_fact:
+        update_audit_template: true
 
 # All changes selected are managed by the POST audit and handlers to update
 - name: "6.2.3.10 | PATCH | Ensure use of privileged commands is collected"
@@ -482,14 +501,14 @@
   tags:
     - level2-server
     - level2-workstation
-    - manual
+    - scored
     - patch
-    - auditd
     - rule_6.2.3.37
     - NIST800-53R5_AU-3
-  ansible.builtin.debug:
-    msg:
-      - "Please run augenrules --load if you suspect there is a configuration that is not active"
+    - auditd
+  ansible.builtin.command: augenrules --check
+  changed_when: false
+  register: discovered_augenrules_check
 
 - name: Auditd | 6.2.3.x | Auditd controls updated
   when: update_audit_template

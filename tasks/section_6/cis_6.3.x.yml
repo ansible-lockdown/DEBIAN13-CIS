@@ -19,6 +19,7 @@
         name: ['aide', 'aide-common']
         state: present
         update_cache: true
+        lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
       register: discovered_aide_pkgs_added
 
     - name: "6.3.1 | PATCH | Ensure AIDE is installed | Recapture packages"

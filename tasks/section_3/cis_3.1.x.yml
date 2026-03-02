@@ -47,7 +47,7 @@
         create: true
       loop: "{{ prelim_wireless_modules.stdout_lines }}"
 
-    - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled  | blacklist"
+    - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | blacklist"
       ansible.builtin.lineinfile:
         path: /etc/modprobe.d/blacklist.conf
         regexp: "^(#)?blacklist {{ item }}(\\s|$)"
@@ -73,6 +73,8 @@
       ansible.builtin.package:
         name: bluez
         state: absent
+        purge: "{{ deb13cis_purge_apt }}"
+        lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
     - name: "3.1.3 | PATCH | Ensure bluetooth services are not in use | mask"
       when:

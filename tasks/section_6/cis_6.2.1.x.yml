@@ -17,6 +17,7 @@
       - auditd
       - audispd-plugins
     state: present
+    lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
 - name: "6.2.1.2 | PATCH | Ensure auditd service is enabled and active"
   when: deb13cis_rule_6_2_1_2

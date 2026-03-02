@@ -44,7 +44,7 @@
         replace: '#APT::Install-\1 "0"'
       loop: "{{ prelim_apt_conf_files.files }}"
 
-    - name: "1.2.1.2 |  PATCH | Ensure weak dependencies are configured | add default template"
+    - name: "1.2.1.2 | PATCH | Ensure weak dependencies are configured | add default template"
       ansible.builtin.template:
         src: etc/apt/apt.conf.d/60-no-weak-dependencies.j2
         dest: /etc/apt/apt.conf.d/60-no-weak-dependencies

@@ -159,8 +159,8 @@
     owner: root
     group: root
     mode: 'u-x,go-rwx'
-  failed_when: discovered_file_exists.state not in '[ file, absent ]'
-  register: discovered_file_exists
+  failed_when: discovered_opasswd_files_exist.state not in '[ file, absent ]'
+  register: discovered_opasswd_files_exist
   loop:
     - /etc/security/opasswd
     - /etc/security/opasswd.old

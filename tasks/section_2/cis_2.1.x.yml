@@ -21,6 +21,7 @@
         name: autofs
         state: absent
         purge: "{{ deb13cis_purge_apt }}"
+        lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
     - name: "2.1.1 | PATCH | Ensure autofs services are not in use | Mask service"
       when:
@@ -49,11 +50,10 @@
         - not deb13cis_avahi_server
         - not deb13cis_avahi_mask
       ansible.builtin.package:
-        name:
-          - avahi-autoipd
-          - avahi
+        name: avahi-daemon
         state: absent
         purge: "{{ deb13cis_purge_apt }}"
+        lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
     - name: "2.1.2 | PATCH | Ensure avahi daemon services are not in use | Mask service"
       when:
@@ -88,6 +88,7 @@
         name: kea
         state: absent
         purge: "{{ deb13cis_purge_apt }}"
+        lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
     - name: "2.1.3 | PATCH | Ensure dhcp server services are not in use | Mask service"
       when:
@@ -123,6 +124,7 @@
         name: bind9
         state: absent
         purge: "{{ deb13cis_purge_apt }}"
+        lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
     - name: "2.1.4 | PATCH | Ensure dns server services are not in use | Mask service"
       when:
@@ -156,6 +158,7 @@
         name: dnsmasq
         state: absent
         purge: "{{ deb13cis_purge_apt }}"
+        lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
     - name: "2.1.5 | PATCH | Ensure dnsmasq server services are not in use | Mask service"
       when:
@@ -188,6 +191,7 @@
         name: vsftpd
         state: absent
         purge: "{{ deb13cis_purge_apt }}"
+        lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
     - name: "2.1.6 | PATCH | Ensure samba file server services are not in use | Mask service"
       when:
@@ -220,6 +224,7 @@
         name: slapd
         state: absent
         purge: "{{ deb13cis_purge_apt }}"
+        lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
     - name: "2.1.7 | PATCH | Ensure ldap server services are not in use | Mask service"
       when:
@@ -255,6 +260,7 @@
           - dovecot-imapd
         state: absent
         purge: "{{ deb13cis_purge_apt }}"
+        lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
     - name: "2.1.8 | PATCH | Ensure message access server services are not in use | Mask service"
       when:
@@ -291,6 +297,7 @@
         name: nfs-kernel-server
         state: absent
         purge: "{{ deb13cis_purge_apt }}"
+        lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
     - name: "2.1.9 | PATCH | Ensure network file system services are not in use | Mask service"
       when:
@@ -323,6 +330,7 @@
         name: ypserv
         state: absent
         purge: "{{ deb13cis_purge_apt }}"
+        lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
     - name: "2.1.10 | PATCH | Ensure nis server services are not in use | Mask service"
       when:
@@ -352,6 +360,7 @@
         name: cups
         state: absent
         purge: "{{ deb13cis_purge_apt }}"
+        lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
     - name: "2.1.11 | PATCH | Ensure print server services are not in use | Mask service"
       when:
@@ -387,6 +396,7 @@
         name: rpcbind
         state: absent
         purge: "{{ deb13cis_purge_apt }}"
+        lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
     - name: "2.1.12 | PATCH | Ensure rpcbind services are not in use | Mask service"
       when:
@@ -422,6 +432,7 @@
         name: rsync
         state: absent
         purge: "{{ deb13cis_purge_apt }}"
+        lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
     - name: "2.1.13 | PATCH | Ensure rsync services are not in use | Mask service"
       when:
@@ -455,6 +466,7 @@
         name: samba
         state: absent
         purge: "{{ deb13cis_purge_apt }}"
+        lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
     - name: "2.1.14 | PATCH | Ensure samba services are not in use | Mask service"
       when:
@@ -486,6 +498,7 @@
         name: snmpd
         state: absent
         purge: "{{ deb13cis_purge_apt }}"
+        lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
     - name: "2.1.15 | PATCH | Ensure snmp services are not in use | Mask service"
       when:
@@ -516,6 +529,7 @@
         name: telnetd
         state: absent
         purge: "{{ deb13cis_purge_apt }}"
+        lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
     - name: "2.1.16 | PATCH | Ensure telnet-server services are not in use | Mask service"
       when:
@@ -547,6 +561,7 @@
         name: tftpd-hpa
         state: absent
         purge: "{{ deb13cis_purge_apt }}"
+        lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
     - name: "2.1.17 | PATCH | Ensure tftp server services are not in use | Mask service"
       when:
@@ -578,6 +593,7 @@
         name: squid
         state: absent
         purge: "{{ deb13cis_purge_apt }}"
+        lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
     - name: "2.1.18 | PATCH | Ensure web proxy server services are not in use | Mask service"
       when:
@@ -611,6 +627,7 @@
         name: apache2
         state: absent
         purge: "{{ deb13cis_purge_apt }}"
+        lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
     - name: "2.1.19 | PATCH | Ensure web server services are not in use | Remove nginx server"
       when:
@@ -620,6 +637,7 @@
         name: nginx
         state: absent
         purge: "{{ deb13cis_purge_apt }}"
+        lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
     - name: "2.1.19 | PATCH | Ensure web server services are not in use | Mask apache2 service"
       when:
@@ -662,6 +680,7 @@
         name: xinetd
         state: absent
         purge: "{{ deb13cis_purge_apt }}"
+        lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
     - name: "2.1.20 | PATCH | Ensure xinetd services are not in use | Mask service"
       when:
@@ -690,12 +709,13 @@
     name: xserver-common
     state: absent
     purge: "{{ deb13cis_purge_apt }}"
+    lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
-- name: "2.1.21 | PATCH | Ensure mail transfer agents are configured for local-only mode"
+- name: "2.1.22 | PATCH | Ensure mail transfer agents are configured for local-only mode"
   when:
     - not deb13cis_is_mail_server
     - "'postfix' in ansible_facts.packages"
-    - deb13cis_rule_2_1_21
+    - deb13cis_rule_2_1_22
   tags:
     - level1-server
     - level1-workstation
@@ -703,7 +723,7 @@
     - patch
     - postfix
     - NIST800-53R5_CM-7
-    - rule_2.1.21
+    - rule_2.1.22
   notify: Restart postfix
   ansible.builtin.lineinfile:
     path: /etc/postfix/main.cf
