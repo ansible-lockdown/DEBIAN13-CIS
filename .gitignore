@@ -17,6 +17,8 @@ history.md
 # VSCode
 .vscode
 vagrant
+.cursor
+.claude*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
