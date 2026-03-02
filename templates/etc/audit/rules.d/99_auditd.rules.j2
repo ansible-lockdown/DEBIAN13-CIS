@@ -34,13 +34,13 @@
 {% endif %}
 {% if deb13cis_rule_6_2_3_8 %}
 -a always,exit -F arch=b64 -S all -F path=/etc/network/interfaces -F perm=wa -k system-locale
-{% if '/etc/network/interfaces.d' is exists %}
+{% if {{ lookup('file', '/etc/network/interfaces.d/') }} %}
 -a always,exit -F arch=b64 -S all -F dir=/etc/network/interfaces.d -F perm=wa -k system-locale
 {% else %}
 ## The following line is commented out as path not present when checked
 # -a always,exit -F arch=b64 -S all -F dir=/etc/network/interfaces.d -F perm=wa -k system-locale
 {% endif %}
-{% if '/etc/netplan' is exists %}
+{% if {{ lookup('file', '/etc/netplan/') }} %}
 -a always,exit -F arch=b64 -S all -F dir=/etc/netplan/ -F perm=wa -k system-locale
 {% else %}
 ## The following line is commented out as path not present when checked
@@ -48,11 +48,11 @@
 {% endif %}
 {% endif %}
 {% if deb13cis_rule_6_2_3_9 %}
-{% if '/etc/NetworkManager' is exists %}
--a always,exit -F arch=b64 -S all -F dir=/etc/NetworkManager -F perm=wa -k system-locale
+{% if {{ lookup('file', '/etc/NetworkManager/') }} %}
+-a always,exit -F arch=b64 -S all -F dir=/etc/NetworkManager/ -F perm=wa -k system-locale
 {% else %}
 ## The following line is commented out as path not present when checked
-# -a always,exit -F arch=b64 -S all -F dir=/etc/NetworkManager -F perm=wa -k system-locale
+# -a always,exit -F arch=b64 -S all -F dir=/etc/NetworkManager/ -F perm=wa -k system-locale
 {% endif %}
 {% endif %}
 {% if deb13cis_rule_6_2_3_10 %}
