@@ -1,10 +1,8 @@
-## Ansible controlled file
-# Added as part of ansible-lockdown CIS baseline
-# provided by Mindpoint Group - A Tyto Athene Company
+{{ file_managed_by_ansible }}
 
 # certificate files - just CA for a client
 global(DefaultNetstreamDriverCAFile="{{ deb13cis_rsyslog_stream_cafile }}")
 
 # set up the action for all messages
-action(type="omfwd" protocol="tcp" target=""{{ deb13_rsyslog_stream_target }}" port="{{ deb13_rsyslog_stream_port }}"
+action(type="omfwd" protocol="tcp" target=""{{ deb13cis_rsyslog_stream_target }}" port="{{ deb13cis_rsyslog_stream_port }}"
        StreamDriver="gtls" StreamDriverMode="1" StreamDriverAuthMode="anon")
