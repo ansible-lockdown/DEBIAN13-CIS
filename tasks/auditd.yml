@@ -11,7 +11,7 @@
 
 - name: "POST | AUDITD | Ensure use of privileged commands is collected"
   ansible.builtin.shell: |
-    {%- set egrep_exclude = "(asdfmnop|{{ deb13cis_priv_command_excluded_mounts | join('|') }})" -%}
+    {%- set egrep_exclude = "(asdfmnop|{{ ubtu24cis_priv_command_excluded_mounts | join('|') }})" -%}
     for i in $(df | grep '^/dev' | grep -Ev '{{ egrep_exclude }}' | awk '{ print $NF }'); do
       find $i -xdev -type f -perm /6000 2>/dev/null;
     done
@@ -19,12 +19,6 @@
   failed_when: false
   check_mode: false
   register: discovered_privileged_commands
-
-- name: "POST | AUDITD | Check if auditd is immutable before changes"
-  ansible.builtin.shell: auditctl -s | grep "enabled 2"
-  changed_when: false
-  failed_when: discovered_auditd_immutable_check.rc not in [ 0, 1 ]
-  register: discovered_auditd_immutable_check
 
 - name: "POST | AUDITD | Apply auditd template for section 6.2.4.x"
   when: update_audit_template
@@ -39,13 +33,13 @@
   register: discovered_audit_rules_updated
   notify:
     - Auditd rules reload
-    - Audit_immutable_fact
+    - Audit immutable fact
     - Restart auditd
 
 - name: POST | AUDITD | Set up auditd user logging exceptions
   when: deb13cis_allow_auditd_uid_user_exclusions
   ansible.builtin.template:
-    src: audit/98_auditd_exception.rules.j2
+    src: etc/audit/rules.d/98_auditd_exception.rules.j2
     dest: /etc/audit/rules.d/98_auditd_exceptions.rules
     owner: root
     group: root

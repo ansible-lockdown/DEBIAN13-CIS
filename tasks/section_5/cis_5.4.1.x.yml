@@ -16,7 +16,7 @@
   vars:
     warn_control_id: '5.4.1.1'
   block:
-    - name: "5.4.1.1 | PATCH | Ensure password expiration is configured | Set /etc/login.defs PASS_MAX_DAYS"
+    - name: "5.4.1.1 | PATCH | Ensure password expiration is configured"
       ansible.builtin.lineinfile:
         path: /etc/login.defs
         regexp: '^PASS_MAX_DAYS|^#PASS_MAX_DAYS'
@@ -29,7 +29,7 @@
       failed_when: false
       register: discovered_passwd_max_days
 
-    - name: "5.4.1.1 | AUDIT | Ensure password expiration is configured | Add warning if ansible user found as break connection"
+    - name: "5.4.1.1 | PATCH | Ensure password expiration is configured | Set existing users PASS_MAX_DAYS"
       when:
         - deb13cis_disruption_high
         - (ansible_user | default(ansible_env.USER)) in discovered_passwd_max_days.stdout
@@ -171,7 +171,7 @@
       check_mode: false
       register: discovered_passwd_inactive_user_list
 
-    - name: "5.4.1.5 | PATCH | Ensure inactive password lock is 30 days or less | Apply Inactive setting to existing accounts"
+    - name: "5.4.1.5 | PATCH | Ensure inactive password lock is configured | Apply Inactive setting to existing accounts"
       when: item in prelim_interactive_usernames.stdout
       ansible.builtin.command: chage --inactive {{ deb13cis_inactivelock_lock_days }} "{{ item }}"
       changed_when: true

@@ -104,7 +104,7 @@
     - NIST800-53R5_MP-2
     - rule_5.1.4
   block:
-    - name: "5.1.4 | PATCH | Ensure SSH access is configured | Add line to sshd_config for allowusers"
+    - name: "5.1.4 | PATCH | Ensure sshd access is configured | Add line to sshd_config for allow users"
       when: "deb13cis_sshd_allow_users | length > 0"
       ansible.builtin.lineinfile:
         path: "{{ deb13cis_sshd_config_file }}"
@@ -113,7 +113,7 @@
         insertbefore: ^(Include|Match)
       notify: Restart sshd
 
-    - name: "5.1.4 | PATCH | Ensure SSH access is configured | Add line to sshd_config for allowgroups"
+    - name: "5.1.4 | PATCH | Ensure sshd access is configured | Add line to sshd_config for allow groups"
       when: "deb13cis_sshd_allow_groups | length > 0"
       ansible.builtin.lineinfile:
         path: "{{ deb13cis_sshd_config_file }}"
@@ -122,7 +122,7 @@
         insertbefore: ^(Include|Match)
       notify: Restart sshd
 
-    - name: "5.1.4 | PATCH | Ensure SSH access is configured | Add line to sshd_config for denyusers"
+    - name: "5.1.4 | PATCH | Ensure sshd access is configured | Add line to sshd_config for deny users"
       when: "deb13cis_sshd_deny_users | length > 0"
       ansible.builtin.lineinfile:
         path: "{{ deb13cis_sshd_config_file }}"
@@ -131,7 +131,7 @@
         insertbefore: ^(Include|Match)
       notify: Restart sshd
 
-    - name: "5.1.4 | PATCH | Ensure SSH access is configured | Add line to sshd_config for denygroups"
+    - name: "5.1.4 | PATCH | Ensure sshd access is configured | Add line to sshd_config for deny groups"
       when: "deb13cis_sshd_deny_groups | length > 0"
       ansible.builtin.lineinfile:
         path: "{{ deb13cis_sshd_config_file }}"

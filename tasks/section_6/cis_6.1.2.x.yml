@@ -74,10 +74,10 @@
     line: '$FileCreateMode 0640'
   notify: Restart syslog service
 
-- name: "6.1.2.5 | PATCH | Ensure logging is configured"
+- name: "6.1.2.5 | PATCH | Ensure rsyslog logging is configured"
   when:
     - deb13cis_rule_6_1_2_5
-    - deb13cis_rsyslog_ansiblemanaged
+    - deb13cis_rsyslog_ansible_managed
   tags:
     - level1-server
     - level1-workstation
@@ -112,12 +112,12 @@
           - "Warning!! Below is the current logging configurations for rsyslog, please review"
           - "{{ discovered_rsyslog_config.stdout_lines }}"
 
-    - name: "6.1.2.5 | PATCH | Ensure logging is configured | Set warning count"
+    - name: "6.1.2.5 | PATCH | Ensure rsyslog logging is configured | Set warning count"
       when: not deb13cis_rsyslog_ansible_managed
       ansible.builtin.import_tasks:
         file: warning_facts.yml
 
-    - name: "6.1.2.5 | PATCH | Ensure logging is configured | Automated rsyslog configuration"
+    - name: "6.1.2.5 | PATCH | Ensure rsyslog logging is configured | Automated rsyslog configuration"
       when: deb13cis_rsyslog_ansible_managed
       ansible.builtin.lineinfile:
         path: "{{ discovered_rsyslog_config_path.stdout }}"
@@ -237,7 +237,7 @@
     - manual
     - patch
     - rsyslog
-    - rule_6.1.2.8
+    - rule_6.1.2.9
     - NIST800-53R5_AU-8
   ansible.builtin.package:
     name: rsyslog-gnutls

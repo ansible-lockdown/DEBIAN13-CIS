@@ -305,7 +305,7 @@
         replace: ""
       loop: "{{ discovered_kernel_kptr_restrict.files }}"
 
-    - name: "1.5.8 | PATCH | Ensure kernel.dmesg_restrict is configured"
+    - name: "1.5.8 | PATCH | Ensure kernel.kptr_restrict is configured"
       ansible.builtin.template:
         src: etc/sysctl.d/60-kernel_sysctl.conf.j2
         dest: /etc/sysctl.d/60-kernel_sysctl.conf
@@ -392,9 +392,7 @@
     mode: 'u-x,go-wx'
 
 - name: "1.5.12 | PATCH | Ensure systemd-coredump ProcessSizeMax is configured | coredump.conf"
-  when:
-    - deb13cis_rule_1_5_12
-    - "'systemd-coredump' in ansible_facts.packages"
+  when: deb13cis_rule_1_5_12
   tags:
     - level1-server
     - level1-workstation
@@ -422,10 +420,8 @@
         mode: 'u-x,go-wx'
       notify: Restart coredump
 
-- name: "1.5.13 | PATCH | Ensure systemd-coredump ProcessSizeMax is configured | coredump.conf"
-  when:
-    - deb13cis_rule_1_5_13
-    - "'systemd-coredump' in ansible_facts.packages"
+- name: "1.5.13 | PATCH | Ensure systemd-coredump Storage is configured | coredump.conf"
+  when: deb13cis_rule_1_5_13
   tags:
     - level1-server
     - level1-workstation
@@ -434,7 +430,7 @@
     - coredump
     - NIST800-53R5_CM-6
   block:
-    - name: "1.5.13 | PATCH | Ensure systemd-coredump ProcessSizeMax is configured | coredump.d directory exists"
+    - name: "1.5.13 | PATCH | Ensure systemd-coredump Storage is configured | coredump.d directory exists"
       ansible.builtin.file:
         path: /etc/systemd/coredump.conf.d
         owner: root
@@ -442,7 +438,7 @@
         mode: 'u=rwx,go-x'
         state: directory
 
-    - name: "1.5.13 | PATCH | Ensure systemd-coredump ProcessSizeMax is configured | coredump.conf"
+    - name: "1.5.13 | PATCH | Ensure systemd-coredump Storage is configured | coredump.conf"
       ansible.builtin.lineinfile:
         path: /etc/systemd/coredump.conf
         regexp: '^Storage'

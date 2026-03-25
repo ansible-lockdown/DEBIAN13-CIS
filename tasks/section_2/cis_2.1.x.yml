@@ -137,7 +137,7 @@
         state: stopped
         masked: true
 
-- name: "2.1.5 | PATCH | Ensure dnsmasq server services are not in use"
+- name: "2.1.5 | PATCH | Ensure dnsmasq services are not in use"
   when:
     - "'dnsmasq' in ansible_facts.packages"
     - deb13cis_rule_2_1_5
@@ -150,7 +150,7 @@
     - NIST800-53R5_CM-7
     - rule_2.1.5
   block:
-    - name: "2.1.5 | PATCH | Ensure dnsmasq server services are not in use | Remove package"
+    - name: "2.1.5 | PATCH | Ensure dnsmasq services are not in use | Remove package"
       when:
         - not deb13cis_dnsmasq_server
         - not deb13cis_dnsmasq_mask
@@ -160,7 +160,7 @@
         purge: "{{ deb13cis_purge_apt }}"
         lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
-    - name: "2.1.5 | PATCH | Ensure dnsmasq server services are not in use | Mask service"
+    - name: "2.1.5 | PATCH | Ensure dnsmasq services are not in use | Mask service"
       when:
         - not deb13cis_dnsmasq_server
         - deb13cis_dnsmasq_mask
@@ -193,7 +193,7 @@
         purge: "{{ deb13cis_purge_apt }}"
         lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
-    - name: "2.1.6 | PATCH | Ensure samba file server services are not in use | Mask service"
+    - name: "2.1.6 | PATCH | Ensure ftp server services are not in use | Mask service"
       when:
         - not deb13cis_ftp_server
         - deb13cis_ftp_mask
@@ -445,7 +445,7 @@
         state: stopped
         masked: true
 
-- name: "2.1.14 | PATCH | Ensure samba services are not in use"
+- name: "2.1.14 | PATCH | Ensure samba file server services are not in use"
   when:
     - "'samba' in ansible_facts.packages"
     - deb13cis_rule_2_1_14
@@ -458,7 +458,7 @@
     - NIST800-53R5_CM-7
     - rule_2.1.14
   block:
-    - name: "2.1.14 | PATCH | Ensure samba services are not in use | Remove package"
+    - name: "2.1.14 | PATCH | Ensure samba file server services are not in use | Remove package"
       when:
         - not deb13cis_samba_server
         - not deb13cis_samba_mask
@@ -468,7 +468,7 @@
         purge: "{{ deb13cis_purge_apt }}"
         lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
-    - name: "2.1.14 | PATCH | Ensure samba services are not in use | Mask service"
+    - name: "2.1.14 | PATCH | Ensure samba file server services are not in use | Mask service"
       when:
         - not deb13cis_samba_server
         - deb13cis_samba_mask
@@ -711,7 +711,7 @@
     purge: "{{ deb13cis_purge_apt }}"
     lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
-- name: "2.1.22 | PATCH | Ensure mail transfer agents are configured for local-only mode"
+- name: "2.1.22 | PATCH | Ensure mail transfer agent is configured for local-only mode"
   when:
     - not deb13cis_is_mail_server
     - "'postfix' in ansible_facts.packages"
@@ -744,7 +744,7 @@
     warn_control_id: '2.1.23'
   block:
     - name: "2.1.23 | AUDIT | Ensure only approved services are listening on a network interface | Get list of services"
-      ansible.builtin.command: systemctl list-units --type=service  # noqa command-instead-of-module
+      ansible.builtin.command: systemctl list-units --type=service # noqa command-instead-of-module
       changed_when: false
       failed_when: discovered_running_services.rc not in [ 0, 1 ]
       check_mode: false

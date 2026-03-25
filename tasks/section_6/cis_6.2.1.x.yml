@@ -51,7 +51,7 @@
     backrefs: true
   notify: Update-grub
 
-- name: "6.2.1.4 | PATCH | Ensure audit_backlog_limit is sufficient"
+- name: "6.2.1.4 | PATCH | Ensure audit_backlog_limit is configured"
   when: deb13cis_rule_6_2_1_4
   tags:
     - level2-server

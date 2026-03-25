@@ -724,7 +724,7 @@ deb13cis_time_sync_tool: "chrony"
 # of the time synchronization mechanism you are using.
 deb13cis_time_pool:
   - name: time.nist.gov
-    options: iburst maxsources 4
+    pool_options: iburst maxsources 4
 # The following variable represents a list of time servers used
 # for configuring chrony and timesyncd
 # Each list item contains two settings, `name` (the domain name of the server) and synchronization `options`.
@@ -1060,7 +1060,7 @@ deb13cis_force_user_mindays: false
 # This variable governs, how many days before a password expires, the user will be warned.
 # CIS requires a value of at least 7.
 deb13cis_pass_warn_age: 7
-## 5Allow the forcing of number of days before warning users of password expiry
+## Allow the forcing of number of days before warning users of password expiry
 # This can break current connecting user access
 deb13cis_force_user_warnage: false
 
@@ -1176,7 +1176,7 @@ deb13cis_journald_runtimekeepfree: 100G
 # Current variable governs the settings for log retention(how long the log files will be kept).
 # Thus, it specifies the maximum time to store entries in a single journal
 # file before rotating to the next one. Set to 0 to turn off this feature.
-# The given values are interpreted as seconds, unless suffixed with the units
+# The values given are interpreted as seconds, unless suffixed with the units
 # `year`, `month`, `week`, `day`, `h` or `m` to override the default time unit of seconds.
 # Values are Xm, Xh, Xday, Xweek, Xmonth, Xyear, for example 2week is two weeks
 # ATTENTION: Uncomment the keyword below when values are set!
@@ -1192,7 +1192,7 @@ deb13cis_system_is_log_server: false
 ## Control 6.1.2.5 | PATCH | Ensure logging is configured
 # This variable governs if current Ansible role should manage syslog settings
 # in /etc/rsyslog.conf file, namely mail, news and misc(warn, messages)
-deb13cis_rsyslog_ansiblemanaged: true
+deb13cis_rsyslog_ansible_managed: true
 
 ## Control 6.1.2.6 - Ensure rsyslog is configured to send logs to a remote log host
 # This variable governs if 'rsyslog' service should be automatically configured to forward messages to a
@@ -1224,29 +1224,30 @@ deb13cis_remote_log_protocol: tcp
 # if server is not responding. For this value to be reflected in the configuration, the variable which enables the
 # automatic configuration of rsyslog forwarding must be enabled('deb13cis_remote_log_server: true').
 deb13cis_remote_log_retrycount: 100
-## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
+## Control 6.1.2.6 - Ensure rsyslog is configured to send logs to a remote log host
 # This variable configures the maximum number of messages that can be hold(value is passed to 'queue.size' parameter).
 # For this value to be reflected in the configuration, the variable which enables the automatic configuration
 # of rsyslog forwarding must be enabled('deb13cis_remote_log_server: true').
 deb13cis_remote_log_queuesize: 1000
 
-# This variable sets the daily, weekly, monthly, yearly value for the log rotation.
-# To conform to CIS standards this just needs to comply with your site policy
-deb13cis_logrotate: "daily"
+# Logrotate settings
+# This variable configures the frequency of log rotation.
+# Valid values are daily, weekly, monthly, yearly.
+# The default value is daily.
+deb13cis_logrotate: daily
 
 ## 6.1.2.10 & 6.2.1.11 rsyslog tls
 # These values are required to be set in order to configure correctly
 # StreamDriver must be set to gtls to enable TLS for encrypting syslog traffic.
 # These values populate the template /etc/rsyslog.d/40-forward.conf.j2
 
-deb13cis_rsyslog_ansible_managed: true
 # certificate files - just CA for a client
 ## Only distribute the ca.pem, NOT ca-key.pem (the private key)
 deb13cis_rsyslog_stream_cafile: "/path/to/contrib/gnutls/ca.pem"
 # taregt for the stream
-deb13_rsyslog_stream_target: "s.example.net"
+deb13cis_rsyslog_stream_target: "s.example.net"
 # Port being used
-deb13_rsyslog_stream_port: "6514"
+deb13cis_rsyslog_stream_port: "6514"
 
 ## Controls 6.2.2.x - What to do when log files fill up
 ## Control 6.2.2.1 - Ensure audit log storage size is configured
@@ -1266,7 +1267,7 @@ deb13cis_audit_back_log_limit: 8192
 ## Control 6.2.2.2
 # This variable determines what action the audit system should take when the maximum
 # size of a log file is reached.
-# The options for setting this variable is as follows:
+# The variable can be set to the following values:
 # - `ignore`: the system does nothing when the size of a log file is full;
 # - `syslog`: a message is sent to the system log indicating the problem;
 # - `suspend`: the system suspends recording audit events until the log file is cleared or rotated;

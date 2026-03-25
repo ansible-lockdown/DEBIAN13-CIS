@@ -458,7 +458,7 @@ deb13cis_rule_7_2_10: {{ deb13cis_rule_7_2_10 }}
 # Section 1
 
 # Whether or not to run tasks related to auditing/patching the desktop environment
-deb13cis_gui: {{ deb13cis_desktop_required }}
+deb13cis_desktop_required: {{ deb13cis_desktop_required }}
 
 ## Controls 1.3.1.3 and 1.3.1.4 Ensure all AppArmor Profiles are in enforce (1.3.1.3/4) or complain (1.3.1.3) mode
 
@@ -544,15 +544,15 @@ deb13cis_ftp_client: {{ deb13cis_ftp_client }}
 deb13cis_time_sync_tool: {{ deb13cis_time_sync_tool }}
 
 ## Controls 2.3.x - Configure time pools & servers for chrony and timesyncd
-# The following variable represents a list oftime server pools used
+# The following variable represents a list of time server pools used
 # for configuring chrony and timesyncd.
 # Each list item contains two settings, `name` (the domain name of the pool) and synchronization `options`.
 # The default setting for the `options` is `iburst maxsources 4` -- please refer to the documentation
 # of the time synchronization mechanism you are using.
-deb13cis_time_pool_name:
+deb13cis_time_pool:
 {% for pool in deb13cis_time_pool %}
   - name: {{ pool.name }}
-    options: {{ pool.options }}
+    pool_options: {{ pool.pool_options }}
 {% endfor %}
 
 # The following variable represents a list of time servers used
@@ -597,7 +597,7 @@ deb13cis_firewall_package: {{ deb13cis_firewall_package }}
 
 deb13cis_sshd_config_file: /etc/ssh/sshd_config
 
-## 5.1.4 Note the following to understand precedence and layout , comma separated
+## 5.1.4 Note the following to understand precedence and layout , comma seperated
 deb13cis_sshd_allow_users: {{ deb13cis_sshd_allow_users }}
 deb13cis_sshd_allow_groups: {{ deb13cis_sshd_allow_groups }}
 deb13cis_sshd_deny_users: {{ deb13cis_sshd_deny_users }}
@@ -629,7 +629,7 @@ deb13cis_syslog: {{ deb13cis_syslog }}
 
 # Control 6.1.x
 ## Set if host is a logserver
-deb13cis_is_syslog_server: {{ deb13cis_system_is_log_server }}
+deb13cis_system_is_log_server: {{ deb13cis_system_is_log_server }}
 
 # Log server settings
 deb13cis_remote_log_host: {{ deb13cis_remote_log_host }}
@@ -643,9 +643,6 @@ deb13cis_remote_log_queuesize: {{ deb13cis_remote_log_queuesize }}
 # rsyslog servers presenting a certificated signed by the CA preventing data leakage or
 # exposure in transit.
 deb13cis_rsyslog_stream_cafile: "{{ deb13cis_rsyslog_stream_cafile }}"
-
-# 6.2 If using auditd
-deb13cis_auditd: {{ deb13cis_rule_6_2_1_1 }}
 
 # Control 6.3.x
 

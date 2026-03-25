@@ -1,5 +1,8 @@
 ---
 
+# Set default value for reboot value
+change_requires_reboot: false
+
 # vars file for DEB13-CIS
 min_ansible_version: 2.14.1
 
@@ -42,7 +45,7 @@ audit_bins:
   - /sbin/auditd
   - /sbin/augenrules
 
-company_title: 'Mindpoint Group - A Tyto Athene Company'
+company_title: 'MindPoint Group - A Tyto Athene Company'
 file_managed_by_ansible: |-
   # File managed by ansible as part of {{ benchmark }} benchmark
   # As part of Ansible-lockdown
