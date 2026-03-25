@@ -48,7 +48,7 @@ benchmark: DEBIAN13-CIS
 # System will reboot if false, can give better audit results
 skip_reboot: true
 
-# default value will change to true but wont reboot if not enabled but will error
+# default value will change to true but won't reboot if not enabled but will error
 change_requires_reboot: false
 
 # Create managed not custom local_facts files
@@ -713,15 +713,15 @@ deb13cis_ftp_client: false
 deb13cis_time_sync_tool: "chrony"
 
 ## Controls 2.3.x - Configure time pools & servers for chrony and timesyncd
-# The following variable represents a list of of time server pools used
+# The following variable represents a list of time server pools used
 # for configuring chrony and timesyncd.
 # Each list item contains two settings, `name` (the domain name of the pool) and synchronization `options`.
 # The default setting for the `options` is `iburst maxsources 4` -- please refer to the documentation
 # of the time synchronization mechanism you are using.
 deb13cis_time_pool:
   - name: time.nist.gov
-    options: iburst maxsources 4
-# The following variable represents a list of of time servers used
+    pool_options: iburst maxsources 4
+# The following variable represents a list of time servers used
 # for configuring chrony and timesyncd
 # Each list item contains two settings, `name` (the domain name of the server) and synchronization `options`.
 # The default setting for the `options` is `iburst` -- please refer to the documentation
@@ -904,7 +904,7 @@ deb13cis_sshd_login_grace_time: 60
 # 4 or less is required
 deb13cis_sshd_max_auth_tries: 4
 
-# This variables is used to set the maximum number of open sessions per connection.
+# This variable is used to set the maximum number of open sessions per connection.
 deb13cis_sshd_max_sessions: 8
 
 # This is set
@@ -1051,7 +1051,7 @@ deb13cis_force_user_mindays: false
 # This variable governs, how many days before a password expires, the user will be warned.
 # CIS requires a value of at least 7.
 deb13cis_pass_warn_age: 7
-## 5Allow the forcing of of number of days before warning users of password expiry
+## Allow the forcing of number of days before warning users of password expiry
 # This can break current connecting user access
 deb13cis_force_user_warnage: false
 
@@ -1167,7 +1167,7 @@ deb13cis_journald_runtimekeepfree: 100G
 # Current variable governs the settings for log retention(how long the log files will be kept).
 # Thus, it specifies the maximum time to store entries in a single journal
 # file before rotating to the next one. Set to 0 to turn off this feature.
-# The given values is interpreted as seconds, unless suffixed with the units
+# The values given are interpreted as seconds, unless suffixed with the units
 # `year`, `month`, `week`, `day`, `h` or `m` to override the default time unit of seconds.
 # Values are Xm, Xh, Xday, Xweek, Xmonth, Xyear, for example 2week is two weeks
 # ATTENTION: Uncomment the keyword below when values are set!
@@ -1183,7 +1183,7 @@ deb13cis_system_is_log_server: false
 ## Control 6.1.2.5 | PATCH | Ensure logging is configured
 # This variable governs if current Ansible role should manage syslog settings
 # in /etc/rsyslog.conf file, namely mail, news and misc(warn, messages)
-deb13cis_rsyslog_ansiblemanaged: true
+deb13cis_rsyslog_ansible_managed: true
 
 ## Control 6.1.2.6 - Ensure rsyslog is configured to send logs to a remote log host
 # This variable governs if 'rsyslog' service should be automatically configured to forward messages to a
@@ -1215,11 +1215,17 @@ deb13cis_remote_log_protocol: tcp
 # if server is not responding. For this value to be reflected in the configuration, the variable which enables the
 # automatic configuration of rsyslog forwarding must be enabled('deb13cis_remote_log_server: true').
 deb13cis_remote_log_retrycount: 100
-## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
+## Control 6.1.2.6 - Ensure rsyslog is configured to send logs to a remote log host
 # This variable configures the maximum number of messages that can be hold(value is passed to 'queue.size' parameter).
 # For this value to be reflected in the configuration, the variable which enables the automatic configuration
 # of rsyslog forwarding must be enabled('deb13cis_remote_log_server: true').
 deb13cis_remote_log_queuesize: 1000
+
+# Logrotate settings
+# This variable configures the frequency of log rotation.
+# Valid values are daily, weekly, monthly, yearly.
+# The default value is daily.
+deb13cis_logrotate: daily
 
 ## 6.1.2.10 & 6.2.1.11 rsyslog tls
 # These values are reqiured to be set in order to configure correctly
@@ -1230,9 +1236,9 @@ deb13cis_remote_log_queuesize: 1000
 ## Only distribute the ca.pem, NOT ca-key.pem (the private key)
 deb13cis_rsyslog_stream_cafile: "/path/to/contrib/gnutls/ca.pem"
 # taregt for the stream
-deb13_rsyslog_stream_target: "s.example.net"
+deb13cis_rsyslog_stream_target: "s.example.net"
 # Port being used
-deb13_rsyslog_stream_port: "6514"
+deb13cis_rsyslog_stream_port: "6514"
 
 ## Controls 6.2.2.x - What to do when log files fill up
 ## Control 6.2.2.1 - Ensure audit log storage size is configured
@@ -1252,7 +1258,7 @@ deb13cis_audit_back_log_limit: 8192
 ## Control 6.2.2.2
 # This variable determines what action the audit system should take when the maximum
 # size of a log file is reached.
-# The options for setting this variable are as follows:
+# The variable can be set to the following values:
 # - `ignore`: the system does nothing when the size of a log file is full;
 # - `syslog`: a message is sent to the system log indicating the problem;
 # - `suspend`: the system suspends recording audit events until the log file is cleared or rotated;
@@ -1378,7 +1384,7 @@ deb13cis_aide_cron_weekday: '*'
 
 # 7.1.12
 # Ensure no files or directories without an owner and a group exist
-# Extend the list as required adding the the current list e.g. "-a ! -path "/somedir/*"
+# Extend the list as required adding the current list e.g. "-a ! -path "/somedir/*"
 # Note Ensure to document all exclusions that do not match the benchmark
 deb13cis_exclude_unowned_search_path: '\( ! -path "/run/user/*" -a ! -path "/proc/*" -a ! -path "*/containerd/*" -a ! -path "*/kubelet/pods/*" -a ! -path "*/kubelet/plugins/*" -a ! -path "/sys/fs/cgroup/memory/*" -a ! -path "/var/*/private/*" \)'
 
