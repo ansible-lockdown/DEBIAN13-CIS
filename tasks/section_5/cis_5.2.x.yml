@@ -99,7 +99,7 @@
         validate: '/usr/sbin/visudo -cf %s'
       loop: "{{ discovered_sudo_reauthenticate.stdout_lines }}"
 
-- name: "5.2.6 | PATCH | Ensure sudo authentication timeout is configured correctly"
+- name: "5.2.6 | PATCH | Ensure sudo timestamp_timeout is configured"
   when: deb13cis_rule_5_2_6
   tags:
     - level1-server
@@ -115,7 +115,7 @@
       failed_when: false
       register: discovered_sudo_timeout_files
 
-    - name: "5.2.6 | PATCH | Ensure sudo authentication timeout is configured correctly | Set value if no results"
+    - name: "5.2.6 | PATCH | Ensure sudo timestamp_timeout is configured | Set value if no results"
       ansible.builtin.lineinfile:
         path: /etc/sudoers
         regexp: 'Defaults timestamp_timeout='
@@ -123,7 +123,7 @@
         validate: '/usr/sbin/visudo -cf %s'
       when: discovered_sudo_timeout_files.stdout | length == 0
 
-    - name: "5.2.6 | PATCH | Ensure sudo authentication timeout is configured correctly | Set value if has results"
+    - name: "5.2.6 | PATCH | Ensure sudo timestamp_timeout is configured | Set value if has results"
       ansible.builtin.replace:
         path: "{{ item }}"
         regexp: 'timestamp_timeout=(\d+)'

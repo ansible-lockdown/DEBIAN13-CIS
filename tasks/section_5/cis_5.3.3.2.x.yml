@@ -29,7 +29,7 @@
         group: root
         mode: 'u-x,go-rwx'
 
-- name: "5.3.3.2.2 | PATCH | Ensure minimum password length is configured"
+- name: "5.3.3.2.2 | PATCH | Ensure password length is configured"
   when: deb13cis_rule_5_3_3_2_2
   tags:
     - level1-server
@@ -39,7 +39,7 @@
     - pam
     - NIST800-53R5_IA-5
   block:
-    - name: "5.3.3.2.2 | PATCH | Ensure minimum password length is configured | Remove minlen from conf files except expected file"
+    - name: "5.3.3.2.2 | PATCH | Ensure password length is configured | Remove minlen from conf files except expected file"
       when: "deb13cis_passwd_minlen_file not in item.path"
       ansible.builtin.replace:
         path: "{{ item.path }}"
@@ -50,7 +50,7 @@
         - { path: '/etc/security/pwquality.conf'}
         - { path: '/etc/pam.d/common-password' }
 
-    - name: "5.3.3.2.2 | PATCH | Ensure minimum password length is configured | Ensure minlen file exists"
+    - name: "5.3.3.2.2 | PATCH | Ensure password length is configured | Ensure minlen file exists"
       ansible.builtin.template:
         src: "{{ deb13cis_passwd_minlen_file }}.j2"
         dest: "/{{ deb13cis_passwd_minlen_file }}"

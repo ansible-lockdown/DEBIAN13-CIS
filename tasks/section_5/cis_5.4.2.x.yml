@@ -106,7 +106,7 @@
   ansible.builtin.debug:
     msg: "This is set as an assert in tasks/main"
 
-- name: "5.4.2.5 | PATCH | Ensure root path Integrity"
+- name: "5.4.2.5 | PATCH | Ensure root path integrity"
   when: deb13cis_rule_5_4_2_5
   tags:
     - level1-server
@@ -164,7 +164,7 @@
             - item.stat.exists
             - item.stat.isdir
             - item.stat.pw_name != 'root' or item.stat.gr_name != 'root' or item.stat.woth or item.stat.wgrp
-            - (item != 'root') and (not deb13cis_uses_root)
+            - (item != 'root')
           ansible.builtin.file:
             path: "{{ item.stat.path }}"
             state: directory

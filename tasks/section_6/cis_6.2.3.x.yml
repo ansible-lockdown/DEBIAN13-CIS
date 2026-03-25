@@ -119,7 +119,7 @@
     update_audit_template: true
 
 # All changes selected are managed by the POST audit and handlers to update
-- name: "6.2.3.10 | PATCH | Ensure use of privileged commands is collected"
+- name: "6.2.3.10 | PATCH | Ensure use of privileged commands are collected"
   when: deb13cis_rule_6_2_3_10
   tags:
     - level2-server
@@ -197,7 +197,7 @@
     update_audit_template: true
 
 # All changes selected are managed by the POST audit and handlers to update
-- name: "6.2.3.16 | PATCH | Ensure events that modify /etc/nsswitch are collected"
+- name: "6.2.3.16 | PATCH | Ensure events that modify /etc/nsswitch.conf file are collected"
   when: deb13cis_rule_6_2_3_16
   tags:
     - level2-server
@@ -398,7 +398,7 @@
     update_audit_template: true
 
 # All changes selected are managed by the POST audit and handlers to update
-- name: "6.2.3.31 | PATCH | Ensure kernel module loading and unloading and modification is collected"
+- name: "6.2.3.31 | PATCH | Ensure kernel module loading unloading and modification is collected"
   when: deb13cis_rule_6_2_3_31
   tags:
     - level2-server
@@ -411,7 +411,7 @@
     update_audit_template: true
 
 # All changes selected are managed by the POST audit and handlers to update
-- name: "6.2.3.32 | PATCH | Ensure kernel 'init_module' and 'finit_module' loading unloading and modification is collected"
+- name: '6.2.3.32 | PATCH | Ensure kernel "init_module" and "finit_module" loading unloading and modification is collected'
   when: deb13cis_rule_6_2_3_32
   tags:
     - level2-server
@@ -424,7 +424,7 @@
     update_audit_template: true
 
 # All changes selected are managed by the POST audit and handlers to update
-- name: 6.2.3.33 | PATCH | Ensure kernel "delete_module" loading unloading and modification is collected
+- name: '6.2.3.33 | PATCH | Ensure kernel "delete_module" loading unloading and modification is collected'
   when: deb13cis_rule_6_2_3_33
   tags:
     - level2-server
@@ -437,7 +437,7 @@
     update_audit_template: true
 
 # All changes selected are managed by the POST audit and handlers to update
-- name: 6.2.3.34 | PATCH | Ensure kernel query_module loading unloading and modification is collected
+- name: "6.2.3.34 | PATCH | Ensure kernel query_module loading unloading and modification is collected"
   when: deb13cis_rule_6_2_3_34
   tags:
     - level2-server
@@ -450,7 +450,7 @@
     update_audit_template: true
 
 # All changes selected are managed by the POST audit and handlers to update
-- name: 6.2.3.35 | PATCH | Ensure the audit configuration is loaded regardless of errors
+- name: "6.2.3.35 | PATCH | Ensure the audit configuration is loaded regardless of errors"
   when: deb13cis_rule_6_2_3_35
   tags:
     - level2-server

@@ -1,6 +1,6 @@
 ---
 
-- name: "7.1.1 | PATCH | Ensure permissions on /etc/passwd are configured"
+- name: "7.1.1 | PATCH | Ensure access to /etc/passwd is configured"
   when: deb13cis_rule_7_1_1
   tags:
     - level1-server
@@ -16,7 +16,7 @@
     group: root
     mode: 'u-x,go-wx'
 
-- name: "7.1.2 | PATCH | Ensure permissions on /etc/passwd- are configured"
+- name: "7.1.2 | PATCH | Ensure access to /etc/passwd- is configured"
   when: deb13cis_rule_7_1_2
   tags:
     - level1-server
@@ -32,7 +32,7 @@
     group: root
     mode: 'u-x,go-wx'
 
-- name: "7.1.3 | PATCH | Ensure permissions on /etc/group are configured"
+- name: "7.1.3 | PATCH | Ensure access to /etc/group is configured"
   when: deb13cis_rule_7_1_3
   tags:
     - level1-server
@@ -48,7 +48,7 @@
     group: root
     mode: 'u-x,go-wx'
 
-- name: "7.1.4 | PATCH | Ensure permissions on /etc/group- are configured"
+- name: "7.1.4 | PATCH | Ensure access to /etc/group- is configured"
   when: deb13cis_rule_7_1_4
   tags:
     - level1-server
@@ -64,7 +64,7 @@
     group: root
     mode: 'u-x,go-wx'
 
-- name: "7.1.5 | PATCH | Ensure permissions on /etc/shadow are configured"
+- name: "7.1.5 | PATCH | Ensure access to /etc/shadow is configured"
   when: deb13cis_rule_7_1_5
   tags:
     - level1-server
@@ -80,7 +80,7 @@
     group: root
     mode: 'g-wx,o-rwx'
 
-- name: "7.1.6 | PATCH | Ensure permissions on /etc/shadow- are configured"
+- name: "7.1.6 | PATCH | Ensure access to /etc/shadow- is configured"
   when: deb13cis_rule_7_1_6
   tags:
     - level1-server
@@ -96,7 +96,7 @@
     group: root
     mode: 'g-wx,o-rwx'
 
-- name: "7.1.7 | PATCH | Ensure permissions on /etc/gshadow are configured"
+- name: "7.1.7 | PATCH | Ensure access to /etc/gshadow is configured"
   when: deb13cis_rule_7_1_7
   tags:
     - level1-server
@@ -112,7 +112,7 @@
     group: root
     mode: 'g-wx,o-rwx'
 
-- name: "7.1.8 | PATCH | Ensure permissions on /etc/gshadow- are configured"
+- name: "7.1.8 | PATCH | Ensure access to /etc/gshadow- is configured"
   when: deb13cis_rule_7_1_8
   tags:
     - level1-server
@@ -128,7 +128,7 @@
     group: root
     mode: 'g-wx,o-rwx'
 
-- name: "7.1.9 | PATCH | Ensure permissions on /etc/shells are configured"
+- name: "7.1.9 | PATCH | Ensure access to /etc/shells is configured"
   when: deb13cis_rule_7_1_9
   tags:
     - level1-server
@@ -144,7 +144,7 @@
     group: root
     mode: 'u-x,go-wx'
 
-- name: "7.1.10 | PATCH | Ensure permissions on /etc/security/opasswd are configured"
+- name: "7.1.10 | PATCH | Ensure access to /etc/security/opasswd is configured"
   when: deb13cis_rule_7_1_10
   tags:
     - level1-server
@@ -159,8 +159,8 @@
     owner: root
     group: root
     mode: 'u-x,go-rwx'
-  failed_when: discovered_file_exists.state not in '[ file, absent ]'
-  register: discovered_file_exists
+  failed_when: discovered_security_opasswd_file_exists.state not in '[ file, absent ]'
+  register: discovered_security_opasswd_file_exists
   loop:
     - /etc/security/opasswd
     - /etc/security/opasswd.old
@@ -183,7 +183,7 @@
       changed_when: false
       register: discovered_worldwriteable_files
 
-    - name: "7.1.11 | PATCH | Ensure no world writable files exist | Adjust world-writable files if they exist (Configurable)"
+    - name: "7.1.11 | PATCH | Ensure world writable files and directories are secured | Adjust world-writable files if they exist (Configurable)"
       when:
         - discovered_worldwriteable_files.stdout_lines is defined
         - discovered_worldwriteable_files.stdout_lines | length > 0
@@ -194,7 +194,7 @@
         state: touch
       loop: "{{ discovered_worldwriteable_files.stdout_lines }}"
 
-    - name: "7.1.11 | PATCH | Ensure no world writable files exist | Adjust world-writable directories add sticky bit"
+    - name: "7.1.11 | PATCH | Ensure world writable files and directories are secured | Adjust world-writable directories add sticky bit"
       ansible.builtin.shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -o+w ! -perm -1002 2>/dev/null | xargs chmod a+t
       failed_when: discovered_set_stickybit.rc not in [ 0, 123 ]
       changed_when: discovered_set_stickybit.rc == 0
@@ -298,7 +298,7 @@
           - "The files are listed below, please confirm the integrity of these binaries"
           - "{{ discovered_suid_sgid_files_flatten }}"
 
-    - name: "7.1.13 | PATCH | Audit SUID executables | Remove SUID bit"
+    - name: "7.1.13 | PATCH | Ensure SUID and SGID files are reviewed | Remove SUID bit"
       when:
         - deb13cis_suid_sgid_adjust
         - discovered_suid_sgid_files_flatten | length > 0

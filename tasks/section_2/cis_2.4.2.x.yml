@@ -1,6 +1,6 @@
 ---
 
-- name: "2.4.2.1 | PATCH | Ensure at is restricted to authorized users"
+- name: "2.4.2.1 | PATCH | Ensure access to at is configured"
   when: deb13cis_rule_2_4_2_1
   tags:
     - level1-server
@@ -9,17 +9,17 @@
     - rule_2.4.2.1
     - cron
   block:
-    - name: "2.4.2.1 | PATCH | Ensure at is restricted to authorized users | Remove at.deny"
+    - name: "2.4.2.1 | PATCH | Ensure access to at is configured | Remove at.deny"
       ansible.builtin.file:
         path: /etc/at.deny
         state: absent
 
-    - name: "2.4.2.1 | PATCH | Ensure at is restricted to authorized users | Check for at.allow"
+    - name: "2.4.2.1 | PATCH | Ensure access to at is configured | Check for at.allow"
       ansible.builtin.stat:
         path: /etc/at.allow
       register: discovered_at_allow_status
 
-    - name: "2.4.2.1 | PATCH | Ensure at is restricted to authorized users | Create at.allow if doesn't exist"
+    - name: "2.4.2.1 | PATCH | Ensure access to at is configured | Create at.allow if doesn't exist"
       when: not discovered_at_allow_status.stat.exists
       ansible.builtin.file:
         path: /etc/at.allow
@@ -28,7 +28,7 @@
         mode: 'u-x,g-wx,o-rwx'
         state: touch
 
-    - name: "2.4.2.1 | PATCH | Ensure at is restricted to authorized users | update at.allow if exists"
+    - name: "2.4.2.1 | PATCH | Ensure access to at is configured | update at.allow if exists"
       when: discovered_at_allow_status.stat.exists
       ansible.builtin.file:
         path: /etc/at.allow
