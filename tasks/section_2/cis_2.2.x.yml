@@ -13,6 +13,7 @@
     name: nis
     state: absent
     purge: "{{ deb13cis_purge_apt }}"
+    lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
 - name: "2.2.2 | PATCH | Ensure rsh client is not installed"
   when:
@@ -28,6 +29,7 @@
     name: rsh-client
     state: absent
     purge: "{{ deb13cis_purge_apt }}"
+    lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
 - name: "2.2.3 | PATCH | Ensure talk client is not installed"
   when:
@@ -43,6 +45,7 @@
     name: talk
     state: absent
     purge: "{{ deb13cis_purge_apt }}"
+    lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
 - name: "2.2.4 | PATCH | Ensure telnet client is not installed"
   when:
@@ -60,6 +63,7 @@
       - inetutils-telnet
     state: absent
     purge: "{{ deb13cis_purge_apt }}"
+    lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
 - name: "2.2.5 | PATCH | Ensure ldap client is not installed"
   when:
@@ -75,6 +79,7 @@
     name: ldap-utils
     state: absent
     purge: "{{ deb13cis_purge_apt }}"
+    lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
 - name: "2.2.6 | PATCH | Ensure ftp client is not installed"
   when:
@@ -90,3 +95,4 @@
     name: ftp
     state: absent
     purge: "{{ deb13cis_purge_apt }}"
+    lock_timeout: "{{ deb13cis_apt_lock_timeout }}"

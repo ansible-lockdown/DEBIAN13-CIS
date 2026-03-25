@@ -17,12 +17,15 @@
       ansible.builtin.package:
         name: "{{ deb13cis_time_sync_tool }}"
         state: present
+        lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
     - name: "2.3.1.1 | PATCH | Ensure a single time synchronization daemon is in use | other pkgs removed"
       when: item != deb13cis_time_sync_tool
       ansible.builtin.package:
         name: "{{ item }}"
         state: absent
+        purge: "{{ deb13cis_purge_apt }}"
+        lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
       loop:
         - chrony
         - ntp

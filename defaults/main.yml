@@ -55,6 +55,10 @@ change_requires_reboot: false
 create_benchmark_facts: true
 ansible_facts_path: /etc/ansible/facts.d
 
+## Apt/dpkg lock timeout (seconds)
+# Used for apt-backed package tasks to wait for dpkg/apt locks.
+deb13cis_apt_lock_timeout: 180
+
 ###
 ### Settings for associated Audit role using Goss
 ###
@@ -739,6 +743,11 @@ deb13cis_time_servers:
 # This will also purge any packages not removed via this playbook
 deb13cis_purge_apt: false
 
+## 2.4.1.x
+### 2.4.1.9
+# List of users, allowed to use cron
+deb13cis_cron_allow_users: []
+
 ## Section 3 vars
 ## Sysctl
 # Service configuration
@@ -1228,7 +1237,7 @@ deb13cis_remote_log_queuesize: 1000
 deb13cis_logrotate: daily
 
 ## 6.1.2.10 & 6.2.1.11 rsyslog tls
-# These values are reqiured to be set in order to configure correctly
+# These values are required to be set in order to configure correctly
 # StreamDriver must be set to gtls to enable TLS for encrypting syslog traffic.
 # These values populate the template /etc/rsyslog.d/40-forward.conf.j2
 

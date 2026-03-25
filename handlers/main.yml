@@ -240,7 +240,18 @@
   ansible.builtin.command: pam-auth-update --enable {{ deb13cis_pam_pwhistory_file }}
   changed_when: true
 
-## Auditd tasks note order for handlers to run
+- name: Auditd rules reload
+  when: discovered_auditd_immutable_check.rc == 1 or discovered_augenrules_check.stdout is search('No change')
+  ansible.builtin.command: augenrules --load
+  changed_when: true
+  failed_when: discovered_augenrule_load.rc not in [ 0, 1 ]
+  register: discovered_augenrule_load
+
+- name: Audit_immutable_fact
+  when: discovered_auditd_immutable_check is defined
+  ansible.builtin.debug:
+    msg: "Reboot required for auditd to apply new rules as immutable set"
+  notify: Change_requires_reboot
 
 - name: Auditd rules reload
   when: not prelim_auditd_immutable_check is defined
@@ -254,12 +265,13 @@
   notify: Set reboot required
 
 - name: Stop auditd process
+  when: discovered_auditd_immutable_check is defined
   ansible.builtin.command: systemctl kill auditd
   changed_when: true
   listen: Restart auditd
 
 - name: Start auditd process
-  ansible.builtin.systemd_service:
+  ansible.builtin.systemd:
     name: auditd
     state: started
   listen: Restart auditd
