@@ -1,13 +1,13 @@
 ---
 
 galaxy_info:
-  author: "MindPoint Group"
+  author: "Ansible-Lockdown Team"
   description: "Apply the Debian 13 CIS"
-  company: "MindPoint Group"
+  company: "MindPoint Group - A Tyto Athene Company"
   license: MIT
   role_name: deb13_cis
   namespace: mindpointgroup
-  min_ansible_version: 2.14.1
+  min_ansible_version: 2.16.1
   platforms:
     - name: Debian
       versions:
@@ -15,7 +15,6 @@ galaxy_info:
   galaxy_tags:
     - system
     - security
-    - stig
     - hardening
     - benchmark
     - compliance

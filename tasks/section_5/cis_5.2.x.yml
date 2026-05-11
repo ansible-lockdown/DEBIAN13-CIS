@@ -27,9 +27,8 @@
     - NIST800-53R5_AC-6
   ansible.builtin.lineinfile:
     path: /etc/sudoers
-    regexp: ^(Defaults\s*)use_pty
-    line: \1use_pty
-    backrefs: true
+    regexp: '^Defaults\s+use_pty'
+    line: Defaults use_pty
     validate: '/usr/sbin/visudo -cf %s'
 
 - name: "5.2.3 | PATCH | Ensure sudo log file exists"
