@@ -4,5 +4,5 @@
 global(DefaultNetstreamDriverCAFile="{{ deb13cis_rsyslog_stream_cafile }}")
 
 # set up the action for all messages
-action(type="omfwd" protocol="tcp" target=""{{ deb13cis_rsyslog_stream_target }}" port="{{ deb13cis_rsyslog_stream_port }}"
+action(type="omfwd" protocol="tcp" target="{{ deb13cis_rsyslog_stream_target }}" port="{{ deb13cis_rsyslog_stream_port }}"
        StreamDriver="gtls" StreamDriverMode="1" StreamDriverAuthMode="anon")
