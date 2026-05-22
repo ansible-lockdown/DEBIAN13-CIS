@@ -579,7 +579,7 @@ deb13cis_debug_mount_data: false
 # If set to `true`, rule will be implemented using the `tmp.mount` systemd-service,
 # otherwise fstab configuration will be used.
 # These /tmp settings will include nosuid,nodev,noexec to conform to CIS standards.
-deb13cis_tmp_svc: false
+deb13cis_tmp_svc: true
 
 ## Controls 1.3.1.x - apparmor
 # AppArmor security policies define what system resources applications can access and their privileges.
