@@ -28,8 +28,8 @@
       failed_when: discovered_hardlinks_files.rc not in [ 0, 257 ]
       register: discovered_hardlinks_files
       loop:
-        - /etc/sysctl.conf
         - /etc/default/ufw
+        - /etc/ufw/sysctl.conf
 
     - name: "1.5.1 | PATCH | Ensure fs.protected_hardlinks is configured | replace incorrect entries"
       when:
@@ -78,8 +78,8 @@
       failed_when: discovered_symlinks_files.rc not in [ 0, 257 ]
       register: discovered_symlinks_files
       loop:
-        - /etc/sysctl.conf
         - /etc/default/ufw
+        - /etc/ufw/sysctl.conf
 
     - name: "1.5.2 | PATCH | Ensure fs.protected_symlinks is configured | replace incorrect entries"
       when:
@@ -140,18 +140,6 @@
       register: discovered_fs_suid_dumpable
 
     - name: "1.5.4 | PATCH | Ensure fs.suid_dumpable is configured | replace incorrect entries"
-      ansible.builtin.replace:
-        path: /etc/sysctl.conf
-        regexp: fs.suid_dumpable\s*=\s*\d*
-        replace: ''
-      changed_when: discovered_dumpable_files.rc == 0
-      failed_when: discovered_dumpable_files.rc not in [ 0, 257 ]
-      register: discovered_dumpable_files
-      loop:
-        - /etc/sysctl.conf
-        - /etc/default/ufw
-
-    - name: "1.5.4 | PATCH | Ensure fs.suid_dumpable is configured | replace incorrect entries"
       when:
         - discovered_fs_suid_dumpable.files is defined
         - item.path != '/etc/sysctl.d/60-fs_sysctl.conf'
@@ -197,8 +185,8 @@
       failed_when: discovered_dmesg_files.rc not in [ 0, 257 ]
       register: discovered_dmesg_files
       loop:
-        - /etc/sysctl.conf
         - /etc/default/ufw
+        - /etc/ufw/sysctl.conf
 
     - name: "1.5.5 | PATCH | Ensure kernel.dmesg_restrict is configured | replace incorrect entries"
       when:
@@ -288,14 +276,6 @@
       register: discovered_kernel_kptr_restrict
 
     - name: "1.5.8 | PATCH | Ensure kernel.kptr_restrict is configured | replace incorrect entries"
-      ansible.builtin.replace:
-        path: /etc/sysctl.conf
-        regexp: kernel.kptr_restrict\s*=\s*\d*
-        replace: ""
-      failed_when: discovered_kptr.rc not in [ 0, 257 ]
-      register: discovered_kptr
-
-    - name: "1.5.8 | PATCH | Ensure kernel.kptr_restrict is configured | replace incorrect entries"
       when:
         - discovered_kernel_kptr_restrict.files is defined
         - item.path != '/etc/sysctl.d/60-kernel_sysctl.conf'
@@ -330,14 +310,6 @@
         path: /etc/sysctl.d
         contains: kernel.yama.ptrace_scope\s*=\s*(?!2)\d*
       register: discovered_kernel_randomize
-
-    - name: "1.5.9 | PATCH | Ensure kernel.randomize_va_space is configured | replace incorrect entries"
-      ansible.builtin.replace:
-        path: /etc/sysctl.conf
-        regexp: kernel.randomize_va_space\s*=\s*\d*
-        replace: ""
-      failed_when: discovered_randomize.rc not in [ 0, 257 ]
-      register: discovered_randomize
 
     - name: "1.5.9 | PATCH | Ensure kernel.randomize_va_space is configured | replace incorrect entries"
       when:
