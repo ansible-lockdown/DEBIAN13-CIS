@@ -53,6 +53,8 @@
 
     - name: "1.3.1.3 | PATCH | Ensure all AppArmor Profiles are enforcing | Get pre apply enforce count"
       ansible.builtin.shell: apparmor_status |  grep "profiles are in enforce mode" | tr -d -c 0-9
+      args:
+        executable: /bin/bash
       changed_when: false
       failed_when: false
       register: discovered_apparmor_pre_count
@@ -64,6 +66,8 @@
 
     - name: "1.3.1.3 | PATCH | Ensure all AppArmor Profiles are enforcing | Get post apply enforce count"
       ansible.builtin.shell: apparmor_status |  grep "profiles are in enforce mode" | tr -d -c 0-9
+      args:
+        executable: /bin/bash
       changed_when: false
       failed_when: false
       register: discovered_apparmor_post_count

@@ -11,7 +11,7 @@
 
 - name: "POST | AUDITD | Ensure use of privileged commands is collected"
   ansible.builtin.shell: |
-    {%- set egrep_exclude = "(asdfmnop|{{ ubtu24cis_priv_command_excluded_mounts | join('|') }})" -%}
+    {%- set egrep_exclude = "(asdfmnop|{{ deb13cis_priv_command_excluded_mounts | join('|') }})" -%}
     for i in $(df | grep '^/dev' | grep -Ev '{{ egrep_exclude }}' | awk '{ print $NF }'); do
       find $i -xdev -type f -perm /6000 2>/dev/null;
     done

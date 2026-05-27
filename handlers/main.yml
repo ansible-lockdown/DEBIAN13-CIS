@@ -144,6 +144,10 @@
     state: remounted
   listen: "Remount /var/log/audit"
 
+- name: Update_Initramfs
+  ansible.builtin.command: update-initramfs -u
+  changed_when: true
+
 - name: Restart coredump
   when: "'systemd-coredump' in ansible_facts.packages"
   ansible.builtin.systemd:
@@ -178,7 +182,13 @@
     name: "{{ deb13cis_time_sync_tool }}"
     state: restarted
 
-- name: Restart sshd
+- name: Restart sshd | Validate config
+  listen: Restart sshd
+  ansible.builtin.command: sshd -t
+  changed_when: false
+
+- name: Restart sshd | Restart service
+  listen: Restart sshd
   ansible.builtin.systemd:
     name: sshd
     state: restarted
@@ -201,7 +211,7 @@
   community.general.ufw:
     state: reloaded
 
-- name: Restart rsyslog
+- name: Restart syslog service
   ansible.builtin.systemd:
     name: rsyslog
     state: restarted
@@ -241,25 +251,32 @@
   changed_when: true
 
 - name: Auditd rules reload
-  when: prelim_auditd_immutable_check.rc == 1 or discovered_augenrules_check.stdout is search('No change')
+  when:
+    - not system_is_container
+    - prelim_auditd_immutable_check.rc == 1 or discovered_augenrules_check.stdout is search('No change')
   ansible.builtin.command: augenrules --load
   changed_when: true
-  failed_when: discovered_augenrule_check.rc not in [ 0, 1 ]
-  register: discovered_augenrule_check
+  failed_when: discovered_augenrules_load.rc not in [ 0, 1 ]
+  register: discovered_augenrules_load
 
 - name: Audit immutable fact
-  when: prelim_auditd_immutable_check is defined
+  when:
+    - not system_is_container
+    - prelim_auditd_immutable_check is defined
   ansible.builtin.debug:
     msg: "Reboot required for auditd to apply new rules as immutable set"
   notify: Set reboot required
 
 - name: Stop auditd process
-  when: prelim_auditd_immutable_check is defined
+  when:
+    - not system_is_container
+    - prelim_auditd_immutable_check is defined
   ansible.builtin.command: systemctl kill auditd
   changed_when: true
   listen: Restart auditd
 
 - name: Start auditd process
+  when: not system_is_container
   ansible.builtin.systemd:
     name: auditd
     state: started
