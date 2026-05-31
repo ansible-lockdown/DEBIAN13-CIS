@@ -47,6 +47,14 @@
 ## The following line is commented out as path not present when checked
 # -a always,exit -F arch=b64 -S all -F dir=/etc/netplan -F perm=wa -k system-locale
 {% endif %}
+{% if 'systemd-networkd' in ansible_facts.packages %}
+-a always,exit -F arch=b64 -S all -F path=/etc/systemd/networkd.conf -F perm=wa -k system-locale
+-a always,exit -F arch=b64 -S all -F dir=/etc/systemd/network -F perm=wa -k system-locale
+{% else %}
+## The following line is commented out as systemd-networkd was nost installed when checked
+# -a always,exit -F arch=b64 -S all -F path=/etc/systemd/networkd.conf -F perm=wa -k system-locale
+# -a always,exit -F arch=b64 -S all -F dir=/etc/systemd/network -F perm=wa -k system-locale
+{% endif %}
 {% endif %}
 {% if deb13cis_rule_6_2_3_9 %}
 {% if discovered_network_manager_stat.stat.exists %}
