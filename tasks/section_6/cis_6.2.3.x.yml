@@ -105,6 +105,11 @@
   block:
     - name: "6.2.3.8 | PATCH | Ensure events that modify the system's network environment are collected"
       ansible.builtin.stat:
+        path: /etc/network/interfaces
+      register: discovered_interfaces_stat
+
+    - name: "6.2.3.8 | PATCH | Ensure events that modify the system's network environment are collected"
+      ansible.builtin.stat:
         path: /etc/network/interfaces.d
       register: discovered_interfaces_d_stat
 
