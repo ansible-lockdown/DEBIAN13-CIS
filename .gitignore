@@ -63,6 +63,7 @@ benchparse/
 *history.md
 *plan.md
 *qa_report*
+test_inv
 
 # GitHub Action/Workflow files
 .github/
