@@ -13,7 +13,7 @@
     - NIST800-53R5_MP-2
     - rule_5.1.1
   block:
-    - name: "5.1.1 | Ensure access to /etc/ssh/sshd_config is configured"
+    - name: "5.1.1 | Ensure access to /etc/ssh/sshd_config.d/ files are configured"
       ansible.builtin.file:
         path: "{{ item.path }}"
         owner: root
@@ -21,7 +21,7 @@
         mode: 'u-x,go-rwx'
       loop: "{{ prelim_sshd_configs.files }}"
 
-    - name: "5.1.1 | Ensure access to /etc/ssh/sshd_config is configured"
+    - name: "5.1.1 | Ensure access to the sshd_config file is configured"
       ansible.builtin.file:
         path: "{{ deb13cis_sshd_config_file }}"
         owner: root
@@ -413,7 +413,7 @@
     - NIST800-53R5_IA-5
     - rule_5.1.16
   ansible.builtin.lineinfile:
-    path: /etc/ssh/sshd_config
+    path: "{{ deb13cis_sshd_config_file }}"
     regexp: (?i)^(#?)\s*MACs
     line: "MACs -{{ deb13cis_sshd_weak_macs | join(',') }}"
     insertbefore: ^Include
