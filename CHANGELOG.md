@@ -2,6 +2,8 @@
 
 ## Based on CIS v1.0.0 - Branch align_1.0.0
 
+- 7.2.9 set default ACLs on home directories but never removed excessive permissions from the
+  directory itself, so /home/<user> stayed at 0755 while the audit expects 0750 or tighter
 - Fix 12 audit files gated on the wrong deb13cis_rule_* toggle
 - Align 2.1.22 title with the benchmark and correct the leading ID in the audit title
 - Remove /etc/sysctl.conf from section 1.5 sysctl handling, no longer honored on Debian 13, and add /etc/ufw/sysctl.conf (thanks @seven-beep, PR #6)
