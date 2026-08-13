@@ -6,6 +6,26 @@
   ansible.builtin.package_facts:
     manager: auto
 
+- name: "POST | AUDIT | Check for ufw sysctl overrides"
+  tags: always
+  ansible.builtin.stat:
+    path: /etc/ufw/sysctl.conf
+  register: discovered_ufw_sysctl_conf
+
+- name: "POST | PATCH | Align ufw log_martians overrides with sysctl.d"
+  when:
+    - discovered_ufw_sysctl_conf.stat.exists | default(false)
+    - item.rule
+  tags: always
+  ansible.builtin.replace:
+    path: /etc/ufw/sysctl.conf
+    regexp: '^net/ipv4/conf/{{ item.scope }}/log_martians\s*=\s*0\s*$'
+    replace: 'net/ipv4/conf/{{ item.scope }}/log_martians=1'
+  notify: Reload sysctl
+  loop:
+    - {scope: 'all', rule: "{{ deb13cis_rule_3_3_1_16 }}"}
+    - {scope: 'default', rule: "{{ deb13cis_rule_3_3_1_17 }}"}
+
 - name: "POST | PATCH | Update sysctl"
   when:
     - deb13cis_sysctl_update
@@ -18,7 +38,10 @@
     owner: root
     group: root
     mode: 'u-x,go-rwx'
-  notify: Reload sysctl
+  notify:
+    - Reload sysctl
+    - Sysctl flush ipv4 route table
+    - Sysctl flush ipv6 route table
   loop:
     - 60-kernel_sysctl.conf
     - 60-disable_ipv6.conf

@@ -41,7 +41,7 @@
   tags:
     - level1-server
     - level1-workstation
-    - manual
+    - automated
     - patch
     - journald
     - rule_6.1.2.3
@@ -152,7 +152,7 @@
   tags:
     - level1-server
     - level1-workstation
-    - automated
+    - manual
     - patch
     - rule_6.1.2.6
     - NIST800-53R5_AU-6
@@ -169,7 +169,7 @@
   tags:
     - level1-server
     - level1-workstation
-    - manual
+    - automated
     - patch
     - rule_6.1.2.7
     - NIST800-53R5_AU-2
@@ -236,7 +236,7 @@
   tags:
     - level1-server
     - level1-workstation
-    - manual
+    - automated
     - patch
     - rsyslog
     - rule_6.1.2.9
@@ -251,7 +251,7 @@
   tags:
     - level2-server
     - level2-workstation
-    - manual
+    - automated
     - patch
     - rsyslog
     - rule_6.1.2.10
