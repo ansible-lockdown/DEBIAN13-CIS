@@ -6,6 +6,7 @@
   directory itself, so /home/<user> stayed at 0755 while the audit expects 0750 or tighter
 - Fix 12 audit files gated on the wrong deb13cis_rule_* toggle
 - Align 2.1.22 title with the benchmark and correct the leading ID in the audit title
+- 1.1.2.1.1 /tmp fix thans to @tomtrix PR #8
 - Remove /etc/sysctl.conf from section 1.5 sysctl handling, no longer honored on Debian 13, and add /etc/ufw/sysctl.conf (thanks @seven-beep, PR #6)
 - Remove three dead duplicate-named 1.5.4 / 1.5.8 / 1.5.9 replace tasks (thanks @seven-beep, PR #6)
 - Fix self-referential changed_when / failed_when on the 1.5.1, 1.5.2 and 1.5.5 replace tasks, now driven by a stat check
