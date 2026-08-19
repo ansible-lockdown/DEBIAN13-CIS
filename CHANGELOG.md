@@ -35,6 +35,8 @@
 - Apply 6.2.4.1 mode to the audit log files rather than recursing the log directory, which left /var/log/audit at 0640
 - Set 6.2.4.4 mode to u+rwx,g+rx,g-w,o-rwx so it converges on 0750 and repairs hosts already left at 0640
 - Glob /usr/share/pam-configs/* in 5.3.3.4.2 and 5.3.3.4.3, the hardcoded pam_unix path does not exist on stock Debian 13
+- audit variable moved to defaults/main/audit.yml for easier override
+- fixed optional uas #12 thanks @masterjanic
 
 ## Based on CIS v1.0.0 - Branch 2026_MAY_QA
 
