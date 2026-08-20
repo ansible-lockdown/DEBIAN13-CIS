@@ -9,14 +9,6 @@
   ansible.builtin.package:
     update_cache: true
 
-- name: "PRELIM | Include audit specific variables"
-  when: run_audit or audit_only or setup_audit
-  tags:
-    - setup_audit
-    - run_audit
-  ansible.builtin.include_vars:
-    file: audit.yml
-
 - name: "PRELIM | Include pre-remediation audit tasks"
   when: run_audit or audit_only
   tags: run_audit
@@ -399,8 +391,11 @@
         - name: "Optional | PATCH | Blacklist uas"
           ansible.builtin.lineinfile:
             path: /etc/modprobe.d/blacklist.conf
+            regexp: "^(#)?blacklist uas(\\s|$)"
             line: 'blacklist uas'
             insertafter: EOF
+            create: true
+            mode: 'u-x,go-rwx'
 
         - name: "Optional | PATCH | Remove uas module"
           when: not system_is_container
