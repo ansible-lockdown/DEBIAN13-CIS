@@ -37,6 +37,7 @@
 - Glob /usr/share/pam-configs/* in 5.3.3.4.2 and 5.3.3.4.3, the hardcoded pam_unix path does not exist on stock Debian 13
 - audit variable moved to defaults/main/audit.yml for easier override
 - fixed optional uas #12 thanks @masterjanic
+- README updates and updated contributing and contributors
 
 ## Based on CIS v1.0.0 - Branch 2026_MAY_QA
 
