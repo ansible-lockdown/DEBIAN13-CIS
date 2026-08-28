@@ -65,62 +65,8 @@ deb13cis_apt_lock_timeout: 180
 
 ###########################################
 ### Goss is required on the remote host ###
-### vars/audit.yml for other settings  ###
 
-# Allow audit to setup the requirements including installing git (if option chosen and downloading and adding goss binary to system)
-setup_audit: false
-
-# enable audits to run - this runs the audit and get the latest content
-run_audit: false
-# Run heavy tests - some tests can have more impact on a system enabling these can have greater impact on a system
-audit_run_heavy_tests: true
-
-# Ability to limit the number of concurrent processes used by goss (default 50)
-audit_max_concurrent: 50
-
-## Only run Audit do not remediate
-audit_only: false
-
-#############################
-
-# How to retrieve audit binary
-# Options are copy or download - detailed settings at the bottom of this file
-# you will need to access to either github or the file already downloaded
-get_audit_binary_method: download
-
-## if get_audit_binary_method - copy the following needs to be updated for your environment
-## it is expected that it will be copied from somewhere accessible to the control node
-## e.g copy from ansible control node to remote host
-audit_bin_copy_location: /some/accessible/path
-
-# how to get audit files onto host options
-# options are git/copy/archive/get_url other e.g. if you wish to run from already downloaded conf
-audit_content: git
-
-# If using either archive, copy, get_url:
-## Note will work with .tar files - zip will require extra configuration
-### If using get_url this is expecting github url in tar.gz format e.g.
-### https://github.com/ansible-lockdown/DEBIAN13-CIS-Audit/archive/refs/heads/benchmark-v1.0.0.tar.gz
-audit_conf_source: "some path or url to copy from"
-
-# Destination for the audit content to be placed on managed node
-# note may not need full path e.g. /opt with the directory being the {{ benchmark }}-Audit directory
-audit_conf_dest: "/opt"
-
-# Where the audit logs are stored
-audit_log_dir: '/opt'
-
-# Method of getting,uploading the summary files
-## Enable the collection of audit files
-fetch_audit_output: false
-## Ensure access and permissions are available for these to occur.
-## options are
-# fetch - fetches from server and moves to location on the ansible controller (could be a mount point available to controller)
-# copy - copies file to a location available to the managed node
-audit_output_collection_method: fetch
-
-# Location to put the audit files
-audit_output_destination: /opt/audit_summaries/
+# moved to defaults/main.audit.yml
 
 ### Goss Settings ##
 ####### END ########
@@ -1044,26 +990,17 @@ deb13cis_pamd_pwhistory_remember: 24
 # This variable governs after how many days a  password expires.
 # CIS requires a value of 365 or less.
 deb13cis_pass_max_days: 365
-## Allow the forcing of setting user_max_days for logins.
-# This can break current connecting user access
-deb13cis_force_user_maxdays: false
-
 ## Control 5.4.1.2
 # This variable specifies the minimum number of days allowed between changing passwords.
 # CIS requires a value of at least 1.
 deb13cis_pass_min_days: 1
-# Allow the force setting of minimum days between changing the password
-# This can break current connecting user access
-deb13cis_force_user_mindays: false
-
 ## Control 5.4.1.3
 # This variable governs, how many days before a password expires, the user will be warned.
 # CIS requires a value of at least 7.
 deb13cis_pass_warn_age: 7
-## Allow the forcing of number of days before warning users of password expiry
-# This can break current connecting user access
-deb13cis_force_user_warnage: false
-
+## Control 5.4.1.4
+# deb13cis_passwd_hash_algo is the hashing algorithm used
+deb13cis_passwd_hash_algo: yescrypt  # pragma: allowlist secret
 ## Control 5.4.1.5
 # This variable specifies the number of days of inactivity before an account will be locked.
 # CIS requires a value of 45 days or less.
@@ -1076,15 +1013,6 @@ deb13cis_futurepwchgdate_autofix: true
 
 # 5.4.2.6 root umask
 deb13cis_root_umask: '0027'  # 0027 or more restrictive
-## Control 5.4.4
-# deb13cis_passwd_hash_algo is the hashing algorithm used
-deb13cis_passwd_hash_algo: yescrypt  # pragma: allowlist secret
-
-## Control 5.4.3 - Default user mask
-# The following variable specifies the "umask" to set in the `/etc/bash.bashrc` and `/etc/profile`.
-# The value needs to be `027` or more restrictive to comply with CIS standards
-deb13cis_bash_umask: '027'
-
 ## Control 5.4.3.2 - Configuring user shell timeout
 # This dictionary is related to ensuring the rule about user shell timeout
 # This variable represents the amount of seconds a command or process is allowed to
@@ -1098,6 +1026,11 @@ deb13cis_shell_session_timeout: 900
 # - `/etc/profile`, or
 # - `/etc/bash.bashrc`.
 deb13cis_shell_session_file: /etc/profile.d/tmout.sh
+
+## Control 5.4.3.3 - Default user mask
+# The following variable specifies the "umask" to set in the `/etc/bash.bashrc` and `/etc/profile`.
+# The value needs to be `027` or more restrictive to comply with CIS standards
+deb13cis_bash_umask: '027'
 
 ### Controls:
 # - 5.4.2.7 -  Ensure system accounts are secured

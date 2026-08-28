@@ -711,7 +711,7 @@
     purge: "{{ deb13cis_purge_apt }}"
     lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
 
-- name: "2.1.22 | PATCH | Ensure mail transfer agent is configured for local-only mode"
+- name: "2.1.22 | PATCH | Ensure mail transfer agents are configured for local-only mode"
   when:
     - not deb13cis_is_mail_server
     - "'postfix' in ansible_facts.packages"

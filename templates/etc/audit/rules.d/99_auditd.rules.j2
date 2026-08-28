@@ -34,7 +34,12 @@
 -a always,exit -F arch=b64 -S all -F path=/etc/hostname -F perm=wa -k system-locale
 {% endif %}
 {% if deb13cis_rule_6_2_3_8 %}
+{% if discovered_interfaces_stat.stat.exists %}
 -a always,exit -F arch=b64 -S all -F path=/etc/network/interfaces -F perm=wa -k system-locale
+{% else %}
+## The following line is commented out as path not present when checked
+# -a always,exit -F arch=b64 -S all -F path=/etc/network/interfaces -F perm=wa -k system-locale
+{% endif %}
 {% if discovered_interfaces_d_stat.stat.exists %}
 -a always,exit -F arch=b64 -S all -F dir=/etc/network/interfaces.d -F perm=wa -k system-locale
 {% else %}
