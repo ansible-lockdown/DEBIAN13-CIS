@@ -12,7 +12,11 @@
     warn_control_id: '1.1.2.1'
   block:
     - name: "1.2.1.1 | AUDIT | Ensure the source.list and .source files use the Signed-By option"
-      ansible.builtin.shell: grep -PRLs -- '^([^#\n\r]+)?\bSigned-By\b' /etc/apt/sources.list /etc/apt/sources.list.d/*.{list,sources}
+      ansible.builtin.shell: |
+        set -o pipefail
+        grep -PRLs -- '^([^#\n\r]+)?\bSigned-By\b' /etc/apt/sources.list /etc/apt/sources.list.d/*.{list,sources}
+      args:
+        executable: "{{ deb13cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_apt_signed_by_missing.rc not in [ 0, 1, 2 ]
       register: discovered_apt_signed_by_missing
@@ -37,7 +41,7 @@
     - NIST800-53R5_SI-2
   block:
     - name: "1.2.1.2 | AUDIT | Ensure weak dependencies are configured | change configs not expected"
-      when: "item.path != /etc/apt/apt.conf.d/60-no-weak-dependencies"
+      when: item.path != '/etc/apt/apt.conf.d/60-no-weak-dependencies'
       ansible.builtin.replace:
         path: "{{ item.path }}"
         regexp: ^APT::Install-(Recommends|Suggests) "1"
