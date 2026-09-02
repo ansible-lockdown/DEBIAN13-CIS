@@ -149,7 +149,7 @@
   changed_when: true
 
 - name: Restart coredump
-  when: "'systemd-coredump' in ansible_facts.packages"
+  when: "'systemd-coredump' in ansible_facts['packages']"
   ansible.builtin.systemd:
     name: systemd-coredump.socket
     state: restarted

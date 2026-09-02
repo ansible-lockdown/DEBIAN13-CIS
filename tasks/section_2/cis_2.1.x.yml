@@ -3,7 +3,7 @@
 - name: "2.1.1 | PATCH | Ensure autofs services are not in use"
   when:
     - deb13cis_rule_2_1_1
-    - "'autofs' in ansible_facts.packages"
+    - "'autofs' in ansible_facts['packages']"
   tags:
     - level1-server
     - level2-workstation
@@ -139,7 +139,7 @@
 
 - name: "2.1.5 | PATCH | Ensure dnsmasq services are not in use"
   when:
-    - "'dnsmasq' in ansible_facts.packages"
+    - "'dnsmasq' in ansible_facts['packages']"
     - deb13cis_rule_2_1_5
   tags:
     - level1-server
@@ -447,7 +447,7 @@
 
 - name: "2.1.14 | PATCH | Ensure samba file server services are not in use"
   when:
-    - "'samba' in ansible_facts.packages"
+    - "'samba' in ansible_facts['packages']"
     - deb13cis_rule_2_1_14
   tags:
     - level1-server
@@ -714,7 +714,7 @@
 - name: "2.1.22 | PATCH | Ensure mail transfer agents are configured for local-only mode"
   when:
     - not deb13cis_is_mail_server
-    - "'postfix' in ansible_facts.packages"
+    - "'postfix' in ansible_facts['packages']"
     - deb13cis_rule_2_1_22
   tags:
     - level1-server

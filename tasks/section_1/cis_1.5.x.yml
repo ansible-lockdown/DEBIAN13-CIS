@@ -233,7 +233,7 @@
     - NIST800-53R5_CM-6
   block:
     - name: "1.5.6 | PATCH | Ensure prelink is not installed | Restore binaries if installed"
-      when: "'prelink' in ansible_facts.packages"
+      when: "'prelink' in ansible_facts['packages']"
       ansible.builtin.command: "prelink -ua"
       changed_when: true
 
@@ -253,7 +253,7 @@
     - rule_1.5.7
   block:
     - name: "1.5.7 | PATCH | Ensure Automatic Error Reporting is configured | disable if installed"
-      when: "'apport' in ansible_facts.packages"
+      when: "'apport' in ansible_facts['packages']"
       ansible.builtin.lineinfile:
         path: /etc/default/apport
         regexp: enabled\s*=\s*(?!0)\d

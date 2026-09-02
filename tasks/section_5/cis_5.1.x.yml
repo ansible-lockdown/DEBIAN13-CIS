@@ -176,7 +176,11 @@
     warn_control_id: "5.1.6"
   block:
     - name: "5.1.6 | AUDIT | Ensure sshd Ciphers are configured | Check state"
-      ansible.builtin.shell: sshd -T | grep -Pi -- '^ciphers\h+\"?([^#\n\r]+,)?((3des|blowfish|cast128|aes(128|192|256))-cbc|arcfour(128|256)?|rijndael-cbc@lysator\.liu\.se)\b'
+      ansible.builtin.shell: |
+        set -o pipefail
+        sshd -T | grep -Pi -- '^ciphers\h+\"?([^#\n\r]+,)?((3des|blowfish|cast128|aes(128|192|256))-cbc|arcfour(128|256)?|rijndael-cbc@lysator\.liu\.se)\b'
+      args:
+        executable: "{{ deb13cis_shell_executable }}"
       changed_when: false
       failed_when: false
       register: discovered_loaded_ciphers
@@ -323,7 +327,7 @@
 - name: "5.1.13 | PATCH | Ensure sshd post-quantum cryptography key exchange algorithms are configured"
   when:
     - deb13cis_rule_5_1_13
-    - "(ansible_facts.packages['openssh-server'][0].version.split('.') | first ) is version_compare ('1:10', '>=')"
+    - "(ansible_facts['packages']['openssh-server'][0].version.split('.') | first ) is version_compare ('1:10', '>=')"
   tags:
     - level1-server
     - level1-workstation

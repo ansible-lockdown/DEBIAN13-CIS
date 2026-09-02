@@ -39,7 +39,7 @@
     - { regexp: 'ServerKeyFile=', line: 'ServerKeyFile={{ deb13cis_journal_upload_serverkeyfile }}'}
     - { regexp: 'ServerCertificateFile=', line: 'ServerCertificateFile={{ deb13cis_journal_servercertificatefile }}'}
     - { regexp: 'TrustedCertificateFile=', line: 'TrustedCertificateFile={{ deb13cis_journal_trustedcertificatefile }}'}
-  notify: Restart journald
+  notify: Restart systemd_journal_upload
 
 - name: "6.1.1.2.3 | PATCH | Ensure systemd-journal-upload is enabled and active"
   when:
