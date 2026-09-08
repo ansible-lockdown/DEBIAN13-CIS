@@ -17,9 +17,11 @@
 - name: "PRELIM | AUDIT | Register if snap being used"
   when: deb13cis_rule_1_1_1_7
   tags: always
-  ansible.builtin.shell: df -h | grep -wc "/snap"
+  ansible.builtin.shell: |
+    set -o pipefail
+    df -h | grep -wc "/snap"
   args:
-    executable: /bin/bash
+    executable: "{{ deb13cis_shell_executable }}"
   changed_when: false
   failed_when: prelim_snap_pkg_mgr.rc not in [ 0, 1 ]
   register: prelim_snap_pkg_mgr
@@ -27,41 +29,55 @@
 - name: "PRELIM | AUDIT | Register if squashfs is built into the kernel"
   when: deb13cis_rule_1_1_1_7
   tags: always
-  ansible.builtin.shell: cat /lib/modules/$(uname -r)/modules.builtin | grep -c "squashfs"
+  ansible.builtin.shell: |
+    set -o pipefail
+    cat /lib/modules/$(uname -r)/modules.builtin | grep -c "squashfs"
   args:
-    executable: /bin/bash
+    executable: "{{ deb13cis_shell_executable }}"
   changed_when: false
   failed_when: prelim_squashfs_builtin.rc not in [ 0, 1 ]
   register: prelim_squashfs_builtin
 
 - name: "PRELIM | AUDIT | Interactive Users"
   tags: always
-  ansible.builtin.shell: >
+  ansible.builtin.shell: |
+    set -o pipefail
     grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false" && $7 != "/dev/null") { print $1 }'
+  args:
+    executable: "{{ deb13cis_shell_executable }}"
   changed_when: false
   check_mode: false
   register: prelim_interactive_usernames
 
 - name: "PRELIM | AUDIT | Interactive User accounts home directories"
   tags: always
-  ansible.builtin.shell: >
+  ansible.builtin.shell: |
+    set -o pipefail
     grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false") { print $6 }'
+  args:
+    executable: "{{ deb13cis_shell_executable }}"
   changed_when: false
   check_mode: false
   register: prelim_interactive_users_home
 
 - name: "PRELIM | AUDIT | Interactive UIDs"
   tags: always
-  ansible.builtin.shell: >
+  ansible.builtin.shell: |
+    set -o pipefail
     grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false") { print $3 }'
+  args:
+    executable: "{{ deb13cis_shell_executable }}"
   changed_when: false
   check_mode: false
   register: prelim_interactive_uids
 
 - name: "PRELIM | AUDIT | Interactive Users | Gather username, uid and home"
   tags: always
-  ansible.builtin.shell: >
+  ansible.builtin.shell: |
+    set -o pipefail
     grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false" && $7 != "/dev/null") { print $1":"$3":"$6 }'
+  args:
+    executable: "{{ deb13cis_shell_executable }}"
   changed_when: false
   check_mode: false
   register: prelim_interactive_users_raw
@@ -86,16 +102,17 @@
 - name: PRELIM | AUDIT | Section 1.1 | Create list of mount points
   tags: always
   ansible.builtin.set_fact:
-    prelim_mount_names: "{{ ansible_facts.mounts | map(attribute='mount') | list }}"
+    prelim_mount_names: "{{ ansible_facts['mounts'] | map(attribute='mount') | list }}"
 
 - name: PRELIM | AUDIT | Section 1.1 | Retrieve mount options
   tags: always
   block:
     - name: PRELIM | AUDIT | Section 1.1 | Retrieve mount options - call mount # noqa command-instead-of-module
       ansible.builtin.shell: |
+        set -o pipefail
         mount | awk '{print $1, $3, $5, $6}'
       args:
-        executable: /bin/bash
+        executable: "{{ deb13cis_shell_executable }}"
       changed_when: false
       check_mode: false
       register: prelim_mount_output
@@ -125,6 +142,7 @@
   ansible.builtin.find:
     path: /etc/apt/apt.conf.d/
     patterns: .*
+    use_regex: true
   register: prelim_apt_conf_files
 
 - name: "PRELIM | AUDIT | Set facts based on boot type"
@@ -171,7 +189,11 @@
   tags: always
   block:
     - name: "PRELIM | AUDIT | Discover is wireless adapter on system"
-      ansible.builtin.shell: find /sys/class/net/*/ -type d -name wireless
+      ansible.builtin.shell: |
+        set -o pipefail
+        find /sys/class/net/*/ -type d -name wireless
+      args:
+        executable: "{{ deb13cis_shell_executable }}"
       changed_when: false
       failed_when: prelim_wireless_adapters.rc not in [ 0, 1 ]
       register: prelim_wireless_adapters
@@ -179,11 +201,12 @@
     - name: "PRELIM | AUDIT | If wireless adapter present capture module"
       when: prelim_wireless_adapters.rc == 0
       ansible.builtin.shell: |
+        set -o pipefail
         for driverdir in $(find /sys/class/net/*/ -type d -name wireless | xargs -0 dirname);
           do basename "$(readlink -f "$driverdir"/device/driver/module)";
         done | sort -u
       args:
-        executable: /bin/bash
+        executable: "{{ deb13cis_shell_executable }}"
       changed_when: false
       check_mode: false
       failed_when: prelim_wireless_modules.rc not in [ 0, 1 ]
@@ -193,7 +216,7 @@
 - name: "PRELIM | PATCH | SSH Config file is not exist"
   when:
     - deb13cis_sshd_config_file != '/etc/ssh/sshd_config'
-    - "'openssh-server' in ansible_facts.packages"
+    - "'openssh-server' in ansible_facts['packages']"
   tags:
     - ssh
     - level1_server
@@ -251,9 +274,11 @@
     - level1-server
     - level1-workstation
     - users
-  ansible.builtin.shell: "cat /etc/passwd | awk -F: '($3 == 0 && $1 != \"root\") {i++;print $1 } END {exit i}'"
+  ansible.builtin.shell: |
+    set -o pipefail
+    cat /etc/passwd | awk -F: '($3 == 0 && $1 != "root") {i++;print $1 } END {exit i}'
   args:
-    executable: /bin/bash
+    executable: "{{ deb13cis_shell_executable }}"
   changed_when: false
   check_mode: false
   register: prelim_uid_zero_accounts_except_root
@@ -299,9 +324,11 @@
       deb13cis_rule_6_2_4_3 or
       deb13cis_rule_6_2_4_4
   tags: always
-  ansible.builtin.shell: grep ^log_file /etc/audit/auditd.conf | awk '{ print $NF }'
+  ansible.builtin.shell: |
+    set -o pipefail
+    grep ^log_file /etc/audit/auditd.conf | awk '{ print $NF }'
   args:
-    executable: /bin/bash
+    executable: "{{ deb13cis_shell_executable }}"
   changed_when: false
   check_mode: false
   register: prelim_auditd_logfile
@@ -331,17 +358,21 @@
   tags: always
   block:
     - name: "PRELIM | AUDIT | Capture UID_MIN information from logins.def"
-      ansible.builtin.shell: grep -w "^UID_MIN" /etc/login.defs | awk '{print $NF}'
+      ansible.builtin.shell: |
+        set -o pipefail
+        grep -w "^UID_MIN" /etc/login.defs | awk '{print $NF}'
       args:
-        executable: /bin/bash
+        executable: "{{ deb13cis_shell_executable }}"
       changed_when: false
       check_mode: false
       register: prelim_uid_min_id
 
     - name: "PRELIM | AUDIT | Capture UID_MAX information from logins.def"
-      ansible.builtin.shell: grep -w "^UID_MAX" /etc/login.defs | awk '{print $NF}'
+      ansible.builtin.shell: |
+        set -o pipefail
+        grep -w "^UID_MAX" /etc/login.defs | awk '{print $NF}'
       args:
-        executable: /bin/bash
+        executable: "{{ deb13cis_shell_executable }}"
       changed_when: false
       check_mode: false
       register: prelim_uid_max_id
@@ -365,9 +396,11 @@
     - always
   block:
     - name: "Optional | AUDIT | Check if UAS kernel module is running"
-      ansible.builtin.shell: "lsmod | grep uas"
+      ansible.builtin.shell: |
+        set -o pipefail
+        lsmod | grep uas
       args:
-        executable: /bin/bash
+        executable: "{{ deb13cis_shell_executable }}"
       changed_when: false
       failed_when: false
       ignore_errors: true

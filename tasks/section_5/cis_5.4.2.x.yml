@@ -40,9 +40,11 @@
     - NIST800-53R5_IA-5
   block:
     - name: "5.4.2.2 | AUDIT | Ensure root is the only GID 0 account | Get members of gid 0"
-      ansible.builtin.shell: "awk -F: '($1 !~ /^(sync|shutdown|halt|operator)/ && $4==\"0\") {print $1}' /etc/passwd | grep -wv 'root'"
+      ansible.builtin.shell: |
+        set -o pipefail
+        awk -F: '($1 !~ /^(sync|shutdown|halt|operator)/ && $4=="0") {print $1}' /etc/passwd | grep -wv 'root'
       args:
-        executable: /bin/bash
+        executable: "{{ deb13cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_gid0_members.rc not in [ 0, 1 ]
       register: discovered_gid0_members
@@ -73,9 +75,11 @@
     - NIST800-53R5_IA-5
   block:
     - name: "5.4.2.3 | AUDIT | Ensure group root is the only GID 0 group | Get groups with gid 0"
-      ansible.builtin.shell: "awk -F: '$3==\"0\"{print $1}' /etc/group | grep -vw 'root'"
+      ansible.builtin.shell: |
+        set -o pipefail
+        awk -F: '$3=="0"{print $1}' /etc/group | grep -vw 'root'
       args:
-        executable: /bin/bash
+        executable: "{{ deb13cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_gid0_groups.rc not in [ 0, 1 ]
       register: discovered_gid0_groups
@@ -125,17 +129,21 @@
     - NIST800-53R5_IA-5
   block:
     - name: "5.4.2.5 | AUDIT | Ensure root path Integrity | Get root paths"
-      ansible.builtin.shell: sudo -Hiu root env | grep '^PATH' | cut -d= -f2
+      ansible.builtin.shell: |
+        set -o pipefail
+        sudo -Hiu root env | grep '^PATH' | cut -d= -f2
       args:
-        executable: /bin/bash
+        executable: "{{ deb13cis_shell_executable }}"
       changed_when: false
       register: discovered_root_paths
 
     - name: "5.4.2.5 | AUDIT | Ensure root path Integrity | Get root paths"
       when: discovered_root_paths is defined
-      ansible.builtin.shell: sudo -Hiu root env | grep '^PATH' | cut -d= -f2 | tr ":" "\n"
+      ansible.builtin.shell: |
+        set -o pipefail
+        sudo -Hiu root env | grep '^PATH' | cut -d= -f2 | tr ":" "\n"
       args:
-        executable: /bin/bash
+        executable: "{{ deb13cis_shell_executable }}"
       changed_when: false
       register: discovered_root_paths_split
 
@@ -146,18 +154,22 @@
 
     - name: "5.4.2.5 | AUDIT | Ensure root path Integrity | Check for empty dirs"
       when: discovered_root_paths is defined
-      ansible.builtin.shell: 'echo {{ root_paths }} | grep -q "::" && echo "roots path contains a empty directory (::)"'
+      ansible.builtin.shell: |
+        set -o pipefail
+        echo {{ root_paths }} | grep -q "::" && echo "roots path contains a empty directory (::)"
       args:
-        executable: /bin/bash
+        executable: "{{ deb13cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_root_path_empty_dir.rc not in [ 0, 1 ]
       register: discovered_root_path_empty_dir
 
     - name: "5.4.2.5 | AUDIT | Ensure root path Integrity | Check for trailing ':'"
       when: discovered_root_paths is defined
-      ansible.builtin.shell: 'echo {{ root_paths }} | cut -d= -f2 | grep -q ":$" && echo "roots path contains a trailing (:)"'
+      ansible.builtin.shell: |
+        set -o pipefail
+        echo {{ root_paths }} | cut -d= -f2 | grep -q ":$" && echo "roots path contains a trailing (:)"
       args:
-        executable: /bin/bash
+        executable: "{{ deb13cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_root_path_trailing_colon.rc not in [ 0, 1 ]
       register: discovered_root_path_trailing_colon
