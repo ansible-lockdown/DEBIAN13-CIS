@@ -21,6 +21,7 @@
     path: "{{ mount_point }}"
     state: remounted
   listen: "Remount /tmp"
+  ignore_errors: "{{ not skip_reboot }}"
 
 - name: "Remounting /tmp systemd"
   when: deb13cis_tmp_svc
@@ -29,6 +30,7 @@
     state: reloaded
     daemon_reload: true
   listen: "Remount /tmp"
+  ignore_errors: "{{ not skip_reboot }}"
 
 - name: "Adding options for /dev/shm"
   vars:
