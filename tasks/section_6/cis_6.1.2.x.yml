@@ -3,7 +3,7 @@
 - name: "6.1.2.1 | PATCH | Ensure rsyslog is installed"
   when:
     - deb13cis_rule_6_1_2_1
-    - "'rsyslog' not in ansible_facts.packages"
+    - "'rsyslog' not in ansible_facts['packages']"
   tags:
     - level1-server
     - level1-workstation
@@ -92,9 +92,11 @@
     warn_control_id: '6.1.2.5'
   block:
     - name: "6.1.2.5 | AUDIT | Ensure logging is configured | Find configuration file"
-      ansible.builtin.shell: grep -r "*.emerg" /etc/* | cut -f1 -d":"
+      ansible.builtin.shell: |
+        set -o pipefail
+        grep -r "*.emerg" /etc/* | cut -f1 -d":"
       args:
-        executable: /bin/bash
+        executable: "{{ deb13cis_shell_executable }}"
       changed_when: false
       failed_when: false
       check_mode: false
@@ -203,7 +205,7 @@
 - name: "6.1.2.8 | PATCH | Ensure logrotate is configured"
   when:
     - deb13cis_rule_6_1_2_8
-    - "'logrotate' in ansible_facts.packages"
+    - "'logrotate' in ansible_facts['packages']"
   tags:
     - level1-server
     - level1-workstation

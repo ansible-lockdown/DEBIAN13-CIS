@@ -1,5 +1,35 @@
 # Changes to DEB13CIS
 
+## Based on CIS v1.0.0 - Branch sept26_update
+
+- sept26_update branch
+  - 7.1.13 find used -perm \( ... or ... \); find read \( as the mode and never returned a
+    file, so the SUID/SGID review passed vacuously. Now \( -perm -02000 -o -perm -04000 \)
+  - 1.1.1.6 blacklisted overlayfs, which has not existed since the 3.x kernels. Now overlay,
+    host-verified: modprobe -n -v overlay went from loading overlay.ko.xz to install /bin/true
+  - 1.2.1.2 and 1.3.1.4 when: expressions were invalid Jinja (unquoted path, and not used as a
+    binary operator) - both now quoted comparisons
+  - prelim apt.conf.d find used patterns: .* as a glob, matching only dotfiles, so 1.2.1.2
+    processed nothing. Added use_regex: true - host-verified 0 of 6 files matched before, 6 after
+  - 3.2.1-3.2.6 modprobe tasks looped two lines against one fixed regexp, so the second item
+    overwrote the first. Each item now carries its own regexp
+  - 3.2.x install regexps were single-quoted, so \\s stayed literal and never matched
+  - 3.1.2 wrote "install <mod> true" with a regexp naming "true"; now /bin/true and the module
+  - 6.1.1.2.2 notified Restart journald, restarting the wrong service; now
+    Restart systemd_journal_upload, which was previously unreachable
+  - 7.2.7 warning referenced discovered_user_username_check, which is defined nowhere
+  - removed a verbatim duplicate 3.2.3 dccp block
+  - ansible_facts dot notation converted to bracket notation, 37 occurrences across 17 files
+  - check_prereqs.yml when: reflowed to double quotes, the bracket form collides with a single-quoted scalar
+  - deb13cis_shell_executable added to vars/main.yml, the role had no shell executable var
+  - set -o pipefail and args executable applied to all 64 shell tasks
+  - 4 folded '>' shell scalars in prelim.yml converted to literal '|', pipefail cannot work in a folded block
+  - 34 hardcoded executable /bin/bash replaced with the role var
+  - risky-shell-pipe removed from the .ansible-lint skip_list, the role now passes with it enabled
+  - fixed the collection of audit privileged commands
+  - 6.2.3.10 registered discovered_privileged_commands but the template reads discovered_privilege_processes, so no rules were written
+  - Audit: 6.2.3.10 placeholder replaced with conf and running checks
+
 ## Based on CIS v1.0.0 - Branch align_1.0.0
 
 - 7.2.9 set default ACLs on home directories but never removed excessive permissions from the
