@@ -15,12 +15,13 @@
 - name: Pre Audit Setup | Download audit binary
   when: get_audit_binary_method == 'download'
   ansible.builtin.get_url:
-    url: "{{ audit_bin_url }}{{ audit_pkg_arch_name }}"
+    url: "{{ audit_bin_url }}{{ audit_pkg_arch_name | lower }}"
     dest: "{{ audit_bin }}"
     owner: root
     group: root
     checksum: "{{ audit_bin_version[audit_pkg_arch_name + '_checksum'] }}"
     mode: 'u+x,go-w'
+    validate_certs: "{{ audit_bin_validate_certs }}"
 
 - name: Pre Audit Setup | Copy audit binary
   when: get_audit_binary_method == 'copy'

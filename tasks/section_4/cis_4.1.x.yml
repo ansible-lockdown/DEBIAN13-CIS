@@ -57,8 +57,8 @@
 - name: "4.1.4 | PATCH | Ensure ufw outgoing default is configured"
   when: deb13cis_rule_4_1_4
   tags:
-    - level1-server
-    - level1-workstation
+    - level2-server
+    - level2-workstation
     - patch
     - rule_4.1.4
     - ufw

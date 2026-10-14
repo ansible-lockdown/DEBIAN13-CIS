@@ -269,7 +269,7 @@
 - name: "5.1.9 | PATCH | Ensure sshd GSSAPIAuthentication is disabled"
   when: deb13cis_rule_5_1_9
   tags:
-    - level1-server
+    - level2-server
     - level1-workstation
     - patch
     - sshd
@@ -327,6 +327,7 @@
 - name: "5.1.13 | PATCH | Ensure sshd post-quantum cryptography key exchange algorithms are configured"
   when:
     - deb13cis_rule_5_1_13
+    - "'openssh-server' in ansible_facts['packages']"
     - "(ansible_facts['packages']['openssh-server'][0].version.split('.') | first ) is version_compare ('1:10', '>=')"
   tags:
     - level1-server
@@ -338,15 +339,17 @@
     - rule_5.1.13
   ansible.builtin.lineinfile:
     path: "{{ deb13cis_sshd_config_file }}"
-    regexp: ^KexAlgorithms ().*$
-    line: KexAlgorithms {% if deb13cis_rule_5_1_12 %}mlkem768x25519-sha256,sntrup761x25519-sha512,{{ deb13cis_sshd_kex_algorithms | join(',') }}{% else %}mlkem768x25519-sha256,sntrup761x25519-sha512,\1{% endif %}
+    regexp: (?i)^(#?)\s*KexAlgorithms.*$
+    line: "KexAlgorithms mlkem768x25519-sha256,sntrup761x25519-sha512,{{ deb13cis_sshd_kex_algorithms | join(',') }}"
     insertbefore: ^(Include|Match)
+    validate: 'sshd -t -f %s'
+  notify: Restart sshd
   register: discovered_kex_ssh_updated
 
 - name: "5.1.12 | PATCH | Ensure sshd KexAlgorithms is configured"
   when:
     - deb13cis_rule_5_1_12
-    - not discovered_kex_ssh_updated is defined
+    - discovered_kex_ssh_updated is skipped
   tags:
     - level1-server
     - level1-workstation

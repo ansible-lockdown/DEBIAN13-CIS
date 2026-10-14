@@ -622,6 +622,7 @@ deb13cis_passwd_complex_option: {{ deb13cis_passwd_complex_option }}
 deb13cis_pass_max_days: {{ deb13cis_pass_max_days }}
 deb13cis_pass_min_days: {{ deb13cis_pass_min_days }}
 deb13cis_pass_warn_age: {{ deb13cis_pass_warn_age }}
+deb13cis_inactivelock_include_root: {{ deb13cis_inactivelock_include_root }}
 
 # Section 6
 
@@ -636,6 +637,7 @@ deb13cis_syslog: {{ deb13cis_syslog }}
 deb13cis_system_is_log_server: {{ deb13cis_system_is_log_server }}
 
 # Log server settings
+deb13cis_remote_log_server: {{ deb13cis_remote_log_server }}
 deb13cis_remote_log_host: {{ deb13cis_remote_log_host }}
 deb13cis_remote_log_port: {{ deb13cis_remote_log_port }}
 deb13cis_remote_log_protocol: {{ deb13cis_remote_log_protocol }}
@@ -650,8 +652,9 @@ deb13cis_rsyslog_stream_cafile: "{{ deb13cis_rsyslog_stream_cafile }}"
 
 # Control 6.3.x
 
+deb13cis_config_aide: {{ deb13cis_config_aide }}
 # aide setup via - cron, timer
 deb13cis_aide_scan: {{ deb13cis_aide_scan }}
 
 # Control 7.1.12
-deb13cis_exclude_unowned_search_path: \({{deb13cis_exclude_unowned_search_path}}\)
+deb13cis_exclude_unowned_search_path: {{ deb13cis_exclude_unowned_search_path }}

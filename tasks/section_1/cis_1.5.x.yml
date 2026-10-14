@@ -57,8 +57,8 @@
 - name: "1.5.2 | PATCH | Ensure fs.protected_symlinks is configured"
   when: deb13cis_rule_1_5_2
   tags:
-    - level1-server
-    - level1-workstation
+    - level2-server
+    - level2-workstation
     - patch
     - sysctl
     - rule_1.5.2
@@ -320,7 +320,7 @@
     - name: "1.5.9 | AUDIT | Ensure kernel.randomize_va_space is configured | find existing config"
       ansible.builtin.find:
         path: /etc/sysctl.d
-        contains: kernel.yama.ptrace_scope\s*=\s*(?!2)\d*
+        contains: kernel.randomize_va_space\s*=\s*(?!2)\d*
       register: discovered_kernel_randomize
 
     - name: "1.5.9 | PATCH | Ensure kernel.randomize_va_space is configured | replace incorrect entries"

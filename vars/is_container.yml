@@ -124,6 +124,57 @@ deb13cis_rule_4_1_3: false
 deb13cis_rule_4_1_4: false
 deb13cis_rule_4_1_5: false
 
+## Privilege escalation, PAM, shadow suite and user environment (section 5 imports skip on containers)
+deb13cis_rule_5_2_1: false
+deb13cis_rule_5_2_2: false
+deb13cis_rule_5_2_3: false
+deb13cis_rule_5_2_4: false
+deb13cis_rule_5_2_5: false
+deb13cis_rule_5_2_6: false
+deb13cis_rule_5_2_7: false
+deb13cis_rule_5_3_1_1: false
+deb13cis_rule_5_3_1_2: false
+deb13cis_rule_5_3_1_3: false
+deb13cis_rule_5_3_2_1: false
+deb13cis_rule_5_3_2_2: false
+deb13cis_rule_5_3_2_3: false
+deb13cis_rule_5_3_2_4: false
+deb13cis_rule_5_3_3_1_1: false
+deb13cis_rule_5_3_3_1_2: false
+deb13cis_rule_5_3_3_1_3: false
+deb13cis_rule_5_3_3_2_1: false
+deb13cis_rule_5_3_3_2_2: false
+deb13cis_rule_5_3_3_2_3: false
+deb13cis_rule_5_3_3_2_4: false
+deb13cis_rule_5_3_3_2_5: false
+deb13cis_rule_5_3_3_2_6: false
+deb13cis_rule_5_3_3_2_7: false
+deb13cis_rule_5_3_3_2_8: false
+deb13cis_rule_5_3_3_3_1: false
+deb13cis_rule_5_3_3_3_2: false
+deb13cis_rule_5_3_3_3_3: false
+deb13cis_rule_5_3_3_4_1: false
+deb13cis_rule_5_3_3_4_2: false
+deb13cis_rule_5_3_3_4_3: false
+deb13cis_rule_5_3_3_4_4: false
+deb13cis_rule_5_4_1_1: false
+deb13cis_rule_5_4_1_2: false
+deb13cis_rule_5_4_1_3: false
+deb13cis_rule_5_4_1_4: false
+deb13cis_rule_5_4_1_5: false
+deb13cis_rule_5_4_1_6: false
+deb13cis_rule_5_4_2_1: false
+deb13cis_rule_5_4_2_2: false
+deb13cis_rule_5_4_2_3: false
+deb13cis_rule_5_4_2_4: false
+deb13cis_rule_5_4_2_5: false
+deb13cis_rule_5_4_2_6: false
+deb13cis_rule_5_4_2_7: false
+deb13cis_rule_5_4_2_8: false
+deb13cis_rule_5_4_3_1: false
+deb13cis_rule_5_4_3_2: false
+deb13cis_rule_5_4_3_3: false
+
 ## Auditd (no auditd in containers)
 deb13cis_rule_6_2_1_1: false
 deb13cis_rule_6_2_1_2: false

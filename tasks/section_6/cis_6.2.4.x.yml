@@ -3,8 +3,8 @@
 - name: "6.2.4.1 | PATCH | Ensure audit log files mode is configured"
   when: deb13cis_rule_6_2_4_1
   tags:
-    - level1-server
-    - level1-workstation
+    - level2-server
+    - level2-workstation
     - patch
     - auditd
     - rule_6.2.4.1
@@ -25,8 +25,8 @@
 - name: "6.2.4.2 | PATCH | Ensure audit log files owner is configured"
   when: deb13cis_rule_6_2_4_2
   tags:
-    - level1-server
-    - level1-workstation
+    - level2-server
+    - level2-workstation
     - patch
     - auditd
     - rule_6.2.4.2
@@ -39,8 +39,8 @@
 - name: "6.2.4.3 | PATCH | Ensure audit log files group owner is configured"
   when: deb13cis_rule_6_2_4_3
   tags:
-    - level1-server
-    - level1-workstation
+    - level2-server
+    - level2-workstation
     - patch
     - auditd
     - rule_6.2.4.3

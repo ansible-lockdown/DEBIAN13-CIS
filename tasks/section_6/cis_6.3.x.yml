@@ -113,8 +113,8 @@
 - name: "6.3.3 | Ensure cryptographic mechanisms are used to protect the integrity of audit tools"
   when: deb13cis_rule_6_3_3
   tags:
-    - level1-server
-    - level1-workstation
+    - level2-server
+    - level2-workstation
     - aide
     - file_integrity
     - patch

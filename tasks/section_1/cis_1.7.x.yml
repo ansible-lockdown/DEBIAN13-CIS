@@ -259,7 +259,7 @@
     - deb13cis_desktop_required
   tags:
     - level1-server
-    - level2-workstation
+    - level1-workstation
     - patch
     - rule_1.7.8
     - gnome
@@ -293,7 +293,7 @@
     - deb13cis_desktop_required
   tags:
     - level1-server
-    - level2-workstation
+    - level1-workstation
     - patch
     - rule_1.7.9
     - gnome
@@ -344,8 +344,8 @@
     - deb13cis_rule_1_7_11
     - deb13cis_desktop_required
   tags:
-    - level1-server
-    - level1-workstation
+    - level2-server
+    - level2-workstation
     - patch
     - rule_1.7.11
     - gnome
