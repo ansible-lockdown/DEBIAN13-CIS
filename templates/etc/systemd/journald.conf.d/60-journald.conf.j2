@@ -3,7 +3,7 @@
 # File created for CIS benchmark
 # CIS rule 6_1_1_1_2
 [Journal]
-{% if deb13cis_rule_6_1_1_1_4 %}
+{% if deb13cis_rule_6_1_1_1_4 and deb13cis_syslog == 'journald' %}
 # Set ForwardToSyslog CIS rule 6_1_1_1_4
 ForwardToSyslog=no
 {% endif %}

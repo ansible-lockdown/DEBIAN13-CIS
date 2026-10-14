@@ -37,8 +37,7 @@
     dest: /etc/audit/rules.d/99_auditd.rules
     owner: root
     group: root
-    mode: 'u-x,go-wx'
-  register: discovered_audit_rules_updated
+    mode: 'u-x,g-wx,o-rwx'
   notify:
     - Auditd rules reload
     - Audit immutable fact

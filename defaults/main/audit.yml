@@ -5,10 +5,10 @@
 # Timeout for those cmds that take longer to run where timeout set
 audit_cmd_timeout: 120000
 
-# Concurrency limit for goss
+# Concurrency limit for the audit binary (syver)
 audit_max_concurrent: 50
 
-# Allow audit to setup the requirements including installing git (if option chosen and downloading and adding goss binary to system)
+# Allow audit to setup the requirements including installing git (if option chosen and downloading and adding the syver binary to system)
 setup_audit: false
 
 # enable audits to run - this runs the audit and get the latest content
@@ -36,7 +36,7 @@ audit_output_destination: /opt/audit_summaries/
 # Where the audit logs are stored
 audit_log_dir: '/opt'
 
-## How to retrieve audit binary(Goss)
+## How to retrieve audit binary(Syver)
 # Options are 'copy' or 'download'
 # - copy: use audit_bin_copy_location
 # - download: use audit_bin_url
@@ -56,7 +56,7 @@ audit_bin_validate_certs: true
 # If using either archive, copy, get_url:
 ## Note will work with .tar files - zip will require extra configuration
 ### If using get_url this is expecting github url in tar.gz format e.g.
-### https://github.com/ansible-lockdown/DEBIAN12-CIS-Audit/archive/refs/heads/benchmark-v1.1.0.tar.gz
+### https://github.com/ansible-lockdown/DEBIAN13-CIS-Audit/archive/refs/heads/benchmark-v1.0.0.tar.gz
 audit_conf_source: "some path or url to copy from"
 
 # Destination for audit content on managed node
@@ -64,16 +64,18 @@ audit_conf_source: "some path or url to copy from"
 audit_conf_dest: "/opt"
 
 # if get_audit_binary_method == download change accordingly
-audit_bin_url: "https://github.com/krameff/goss/releases/download/{{ audit_bin_version.release }}/goss-linux-"
+# Syver (https://github.com/krameff/syver) is the continuation of the krameff goss fork - a signed fork that is
+# regularly updated and reads the same goss.yml audit content
+audit_bin_url: "https://github.com/krameff/syver/releases/download/{{ audit_bin_version.release }}/syver-linux-"
 
-### Goss Audit Benchmark file ###
+### Audit Benchmark content ###
 ## managed by the control audit_content
 # git
 audit_file_git: "https://github.com/ansible-lockdown/{{ benchmark }}-Audit.git"
 audit_git_version: "benchmark_{{ benchmark_version }}"
 
-## Goss configuration information
-# Where the goss audit configuration will be stored - NOTE benchmark-audit is expected
+## Audit configuration information
+# Where the audit configuration will be stored - NOTE benchmark-audit is expected
 audit_conf_dir: "{{ audit_conf_dest | default('/opt') }}/{{ benchmark }}-Audit"
 
 # If changed these can affect other products
@@ -84,11 +86,11 @@ post_audit_outfile: "{{ audit_log_dir }}/{{ ansible_facts['hostname'] }}-{{ benc
 
 ### Audit binary settings ###
 audit_bin_version:
-  release: v0.5.0
-  AMD64_checksum: 'sha256:1371df12806586e4c6b122a22e1dbc2b9008160099eaf2816d139cc825ffc40a'
-  ARM64_checksum: 'sha256:d34fae1b2e33bbe2f461418891c88dd636f212a0a2d4bb0601111a8dfa09efa2'
+  release: v0.13.0
+  AMD64_checksum: 'sha256:8d1b210b6a9c4e24341e77cde11ed278f809b193a4368b0723e344c04111ae6e'
+  ARM64_checksum: 'sha256:c40886ee66b893276299a320abcd3c56b00b6e343ff5343e67cd3b348390a8a7'
 audit_bin_path: /usr/local/bin/
-audit_bin: "{{ audit_bin_path }}goss"
+audit_bin: "{{ audit_bin_path }}syver"
 audit_format: json
 
 audit_vars_path: "{{ audit_conf_dir }}/vars/{{ ansible_facts['hostname'] }}.yml"

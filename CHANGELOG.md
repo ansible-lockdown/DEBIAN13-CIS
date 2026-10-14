@@ -1,5 +1,51 @@
 # Changes to DEB13CIS
 
+## CIS Benchmark v1.0.0
+## October 2026 - QA fixes
+
+- 2.2.1 nis removal gated on deb13cis_nis_client_required
+- 5.4.1.5 deb13cis_inactivelock_include_root added to apply the inactive lock to root
+- 6.1.1.1.x journald config directory created whatever the syslog choice (addresses public issue 21) - Thank you @moritzrp
+- 6.1.1.1.6 dest no longer ends .j2, stray 60-journald.conf.j2 removed (addresses pblic issue 22) - Thank you @moritzrp
+- 6.1.1.1.4 ForwardToSyslog=no applied only when deb13cis_syslog is journald
+- 6.1.2.3 ForwardToSyslog change restarts journald
+- 6.1.1.1.1 and 6.1.1.1.2 tagged patch
+- 2.3.1.1 mask task uses ansible.builtin.systemd
+- 2.2.1, 2.3.2.2 and 2.3.3.3 given the patch tag
+- 1.3.1.4 sysctl.d find uses a glob pattern
+- 1.3.1.3 reports changed only when the enforce count changes
+- 1.5.9 find searches for kernel.randomize_va_space
+- 1.2.1.6 auth.conf.d files set to 0640
+- prelim apt repo file find uses a regex pattern
+- prelim UID 0 discovery no longer fails when extra accounts exist
+- 5.1.12 runs when 5.1.13 is skipped
+- 5.1.13 KexAlgorithms line fixed, validated and restarts sshd
+- 5.1.13 guarded when openssh-server is not installed
+- 6.1.3.1 log file tasks match on item.path, stray failed_when removed
+- 7.2.10 skipped when no interactive home directories exist
+- pam-configs templates: managed-by-ansible header removed
+- pam_unix.j2 Password line ends {% endif +%}
+- pwquality.j2 Password-Initial module line added
+- level tags corrected from the benchmark profiles (26 controls)
+- uas removal moved out of tags: always, tagged rule_1.1.1.9
+- section 5 rule toggles added to vars/is_container.yml
+- 99_auditd.rules mode o-rwx
+- Boot type detection moved before the pre-remediation audit
+- Container discovery guarded when virtualization_type is undefined
+- ansible_env and ansible_local replaced with ansible_facts
+- compliance facts refresh reads post_audit_results
+- no_log on the sudo user password hash lookup
+- audit_bin_validate_certs wired to the binary download
+- deb13cis_remote_log_server and deb13cis_config_aide passed to the audit
+- 7.1.12 unowned search path no longer double-wrapped in the audit bridge
+- unused registers removed
+- stale section comments in defaults corrected
+- Company name updated to MindPoint Group - A Quantum Sky Company
+- audit binary switched from goss to syver v0.13.0
+- prelim_goss_available renamed prelim_audit_bin_available
+- README audit section describes syver
+- changelog update
+
 ## Based on CIS v1.0.0 - Branch sept26_update
 
 - sept26_update branch

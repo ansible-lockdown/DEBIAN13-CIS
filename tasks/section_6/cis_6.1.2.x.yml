@@ -54,7 +54,9 @@
     path: /etc/systemd/journald.conf
     regexp: ^ForwardToSyslog=
     line: ForwardToSyslog=yes
-  notify: Restart syslog service
+  notify:
+    - Restart journald
+    - Restart syslog service
 
 - name: "6.1.2.4 | PATCH | Ensure rsyslog log file creation mode is configured"
   when: deb13cis_rule_6_1_2_4
@@ -236,8 +238,8 @@
 - name: "6.1.2.9 | PATCH | Ensure rsyslog-gnutls is installed"
   when: deb13cis_rule_6_1_2_9
   tags:
-    - level1-server
-    - level1-workstation
+    - level2-server
+    - level2-workstation
     - automated
     - patch
     - rsyslog

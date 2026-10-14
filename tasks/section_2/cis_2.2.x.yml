@@ -3,10 +3,11 @@
 - name: "2.2.1 | PATCH | Ensure nis client is not installed"
   when:
     - deb13cis_rule_2_2_1
-    - not deb13cis_nis_server
+    - not deb13cis_nis_client_required
   tags:
     - level1-server
     - level1-workstation
+    - patch
     - rule_2.2.1
     - nis
   ansible.builtin.package:
