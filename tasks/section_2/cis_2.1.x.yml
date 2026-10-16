@@ -346,6 +346,7 @@
   when: deb13cis_rule_2_1_11
   tags:
     - level1-server
+    - level2-workstation
     - automated
     - patch
     - cups
@@ -698,8 +699,7 @@
     - not deb13cis_xwindow_server
     - deb13cis_rule_2_1_21
   tags:
-    - level1-server
-    - level1-workstation
+    - level2-server
     - automated
     - patch
     - xwindow

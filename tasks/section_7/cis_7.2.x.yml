@@ -329,6 +329,7 @@
   when:
     - deb13cis_rule_7_2_10
     - deb13cis_disruption_high
+    - prelim_interactive_users_home.stdout_lines | length > 0
   tags:
     - level1-server
     - level1-workstation

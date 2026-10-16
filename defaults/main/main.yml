@@ -60,15 +60,15 @@ ansible_facts_path: /etc/ansible/facts.d
 deb13cis_apt_lock_timeout: 180
 
 ###
-### Settings for associated Audit role using Goss
+### Settings for associated Audit role using Syver
 ###
 
 ###########################################
-### Goss is required on the remote host ###
+### Syver is required on the remote host ###
 
 # moved to defaults/main.audit.yml
 
-### Goss Settings ##
+### Syver Settings ##
 ####### END ########
 
 # These variables correspond with the CIS rule IDs or paragraph numbers defined in
@@ -390,7 +390,7 @@ deb13cis_rule_6_1_1_1_3: true
 deb13cis_rule_6_1_1_1_4: true
 deb13cis_rule_6_1_1_1_5: true
 deb13cis_rule_6_1_1_1_6: true
-# 6.1.1.2 Configure systemd-journald service
+# 6.1.1.2 Configure systemd-journal-remote
 deb13cis_rule_6_1_1_2_1: true
 deb13cis_rule_6_1_1_2_2: true
 deb13cis_rule_6_1_1_2_3: true
@@ -621,7 +621,7 @@ deb13cis_message_server: false  # This is for messaging dovecot and cyrus-imap
 deb13cis_message_mask: false
 deb13cis_nfs_server: true
 deb13cis_nfs_mask: true
-deb13cis_nis_server: true  # set to mask if nis client required
+deb13cis_nis_server: true  # set to mask if nis client required, nis client package is controlled by deb13cis_nis_client_required
 deb13cis_nis_mask: false
 deb13cis_print_server: false  # replaces cups
 deb13cis_print_mask: false
@@ -1005,6 +1005,8 @@ deb13cis_passwd_hash_algo: yescrypt  # pragma: allowlist secret
 # This variable specifies the number of days of inactivity before an account will be locked.
 # CIS requires a value of 45 days or less.
 deb13cis_inactivelock_lock_days: 45
+# Set to true to also apply the inactive lock to root when it has a password
+deb13cis_inactivelock_include_root: false
 
 ## Control 5.4.1.6 - Ensure all users last password change date is in the past
 # Allow ansible to expire password for account with a last changed date in the future. Setting it
@@ -1056,10 +1058,10 @@ prelim_max_int_uid: 65533
 #
 ## Preferred method of logging
 ## Whether rsyslog or journald preferred method for local logging
-## Control 6.2.3 | Configure rsyslog
-## Control 6.2.1 | Configure journald
+## Control 6.1.2 | Configure rsyslog
+## Control 6.1.1.2 | Configure journald-remote
 # This variable governs which logging service should be used, choosing between 'rsyslog'(CIS recommendation)
-# or 'journald'(only one is implemented) will trigger the execution of the associated subsection, as the-best
+# or 'journald' will trigger the execution of the associated subsection, as the-best
 # practices are written wholly independent of each other.
 deb13cis_syslog: journald
 
@@ -1070,21 +1072,20 @@ deb13cis_syslog: journald
 deb13cis_journal_upload_url: 192.168.50.42
 ## The paths below have the default paths/files, but allow user to create custom paths/filenames
 
-## Control 6.1.4.1.2 - Ensure systemd-journal-remote is configured
+## Control 6.1.1.2.2 - Ensure systemd-journal-remote is configured
 # This variable specifies the path to the private key file used by the remote journal
 # server to authenticate itself to the client. This key is used alongside the server's
 # public certificate to establish secure communication.
 deb13cis_journal_upload_serverkeyfile: "/etc/ssl/private/journal-upload.pem"
-## Control 6.1.4.1.2 - Ensure systemd-journal-remote is configured
+## Control 6.1.1.2.2 - Ensure systemd-journal-remote is configured
 # This variable specifies the path to the public certificate file of the remote journal
 # server. This certificate is used to verify the authenticity of the remote server.
 deb13cis_journal_servercertificatefile: "/etc/ssl/certs/journal-upload.pem"
-## Control 6.1.4.1.2 - Ensure systemd-journal-remote is configured
+## Control 6.1.1.2.2 - Ensure systemd-journal-remote is configured
 # This variable specifies the path to a file containing one or more public certificates
 # of certificate authorities (CAs) that the client trusts. These trusted certificates are used
 # to validate the authenticity of the remote server's certificate.
 deb13cis_journal_trustedcertificatefile: "/etc/ssl/ca/trusted.pem"
-# ATTENTION: Uncomment the keyword below when values are set!
 
 ## Control 6.1.1.1.3 - Ensure journald log rotation is configured per site policy
 # Current variable configures the max amount of disk space the logs will use(thus, journal files
@@ -1112,7 +1113,6 @@ deb13cis_journald_runtimekeepfree: 100G
 # The values given are interpreted as seconds, unless suffixed with the units
 # `year`, `month`, `week`, `day`, `h` or `m` to override the default time unit of seconds.
 # Values are Xm, Xh, Xday, Xweek, Xmonth, Xyear, for example 2week is two weeks
-# ATTENTION: Uncomment the keyword below when values are set!
 deb13cis_journald_maxfilesec: 1month
 
 # Control 6.1.2.x - Ensure rsyslog is not configured to receive logs from a remote client
@@ -1169,7 +1169,7 @@ deb13cis_remote_log_queuesize: 1000
 # The default value is daily.
 deb13cis_logrotate: daily
 
-## 6.1.2.10 & 6.2.1.11 rsyslog tls
+## 6.1.2.10 & 6.1.2.11 rsyslog tls
 # These values are required to be set in order to configure correctly
 # StreamDriver must be set to gtls to enable TLS for encrypting syslog traffic.
 # These values populate the template /etc/rsyslog.d/40-forward.conf.j2

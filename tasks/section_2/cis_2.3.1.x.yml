@@ -34,7 +34,7 @@
       when:
         - deb13cis_time_sync_tool != "systemd-timesyncd"
         - "'systemd-timesyncd' in ansible_facts['packages']"
-      ansible.builtin.service:
+      ansible.builtin.systemd:
         name: systemd-timesyncd
         masked: true
         daemon_reload: true

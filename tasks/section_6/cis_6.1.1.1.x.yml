@@ -5,7 +5,7 @@
   tags:
     - level1-server
     - level1-workstation
-    - audit
+    - patch
     - journald
     - rule_6.1.1.1.1
     - NIST800-53R5_SC-24
@@ -20,7 +20,7 @@
   tags:
     - level1-server
     - level1-workstation
-    - audit
+    - patch
     - journald
     - rule_6.1.1.1.2
     - NIST800-53R5_AC-3
@@ -101,10 +101,12 @@
       notify: Restart journald
 
 - name: "6.1.1.1.4 | PATCH | Ensure journald ForwardToSyslog is disabled"
-  when: deb13cis_rule_6_1_1_1_4
+  when:
+    - deb13cis_rule_6_1_1_1_4
+    - deb13cis_syslog == 'journald'
   tags:
     - level1-server
-    - level2-workstation
+    - level1-workstation
     - patch
     - journald
     - rule_6.1.1.1.4
@@ -169,11 +171,16 @@
     - name: "6.1.1.1.6 | PATCH | Ensure journald Compress is configured | Add file"
       ansible.builtin.template:
         src: etc/systemd/journald.conf.d/60-journald.conf.j2
-        dest: /etc/systemd/journald.conf.d/60-journald.conf.j2
+        dest: /etc/systemd/journald.conf.d/60-journald.conf
         owner: root
         group: root
         mode: 'g-wx,o-rwx'
       notify: Restart journald
+
+    - name: "6.1.1.1.6 | PATCH | Ensure journald Compress is configured | Remove misnamed file from earlier releases"
+      ansible.builtin.file:
+        path: /etc/systemd/journald.conf.d/60-journald.conf.j2
+        state: absent
 
     - name: "6.1.1.1.6 | PATCH | Ensure journald Compress is configured | comment out current entries"
       ansible.builtin.replace:
