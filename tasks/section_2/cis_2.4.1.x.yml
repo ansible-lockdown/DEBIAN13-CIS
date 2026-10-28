@@ -148,13 +148,17 @@
         path: /etc/cron.allow
       register: discovered_cron_allow_status
 
+    - name: "2.4.1.9 | PATCH | Ensure access to crontab is configured | Check for crontab group"
+      ansible.builtin.getent:
+        database: group
+
     - name: "2.4.1.9 | PATCH | Ensure access to crontab is configured | Create cron.allow if doesn't exist"
       when: not discovered_cron_allow_status.stat.exists
       ansible.builtin.copy:
         dest: /etc/cron.allow
         content: "{{ (deb13cis_cron_allow_users | default([])) | join('\n') ~ '\n' }}"
         owner: root
-        group: root
+        group: '{{ "crontab" if "crontab" in ansible_facts.getent_group else "root" }}'
         mode: "u-x,g-wx,o-rwx"
 
     - name: "2.4.1.9 | PATCH | Ensure access to crontab is configured | Update cron.allow if exists"
@@ -163,5 +167,16 @@
         dest: /etc/cron.allow
         content: "{{ (deb13cis_cron_allow_users | default([])) | join('\n') ~ '\n' }}"
         owner: root
-        group: '{{ (discovered_cron_allow_status.stat.gr_name == "crontab") | ternary(omit, "root") }}'
+        group: '{{ "crontab" if "crontab" in ansible_facts.getent_group else "root" }}'
         mode: 'u-x,g-wx,o-rwx'
+
+    - name: "2.4.1.9 | PATCH | Ensure access to crontab is configured | Ensure deb13cis_cron_allow_users are in crontab group"
+      when: '"crontab" in ansible_facts.getent_group'
+      ansible.builtin.user:
+        name: "{{ item }}"
+        groups: ['crontab']
+        create_home: false
+        append: true
+      loop: "{{ deb13cis_cron_allow_users | default([]) }}"
+      loop_control:
+        label: "{{ item }}"
