@@ -557,6 +557,13 @@ deb13cis_grub_user_file: /etc/grub.d/00_user
 # User to login to grub with
 deb13cis_grub_user: root
 
+## Control 1.2.1.1
+# Convert apt sources that lack Signed-By to the deb822 format with apt modernize-sources (apt 3.0).
+# /etc/apt/sources.list becomes /etc/apt/sources.list.d/debian.sources with Signed-By added, the old file is
+# kept as sources.list.bak. Entries whose key apt cannot determine are still reported as a warning.
+# Set to false to only warn
+deb13cis_apt_modernize_sources: true
+
 ## Controls 1.5.x
 
 # 1.5.8 kernel.kptr_restrict can be 1 or 2

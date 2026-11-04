@@ -143,25 +143,14 @@
         path: /etc/cron.deny
         state: absent
 
-    - name: "2.4.1.9 | PATCH | Ensure access to crontab is configured | Check for cron.allow"
-      ansible.builtin.stat:
-        path: /etc/cron.allow
-      register: discovered_cron_allow_status
+    - name: "2.4.1.9 | PATCH | Ensure access to crontab is configured | Check for the crontab group"
+      ansible.builtin.getent:
+        database: group
 
-    - name: "2.4.1.9 | PATCH | Ensure access to crontab is configured | Create cron.allow if doesn't exist"
-      when: not discovered_cron_allow_status.stat.exists
+    - name: "2.4.1.9 | PATCH | Ensure access to crontab is configured | Create or update cron.allow"
       ansible.builtin.copy:
         dest: /etc/cron.allow
         content: "{{ (deb13cis_cron_allow_users | default([])) | join('\n') ~ '\n' }}"
         owner: root
-        group: root
-        mode: "u-x,g-wx,o-rwx"
-
-    - name: "2.4.1.9 | PATCH | Ensure access to crontab is configured | Update cron.allow if exists"
-      when: discovered_cron_allow_status.stat.exists
-      ansible.builtin.copy:
-        dest: /etc/cron.allow
-        content: "{{ (deb13cis_cron_allow_users | default([])) | join('\n') ~ '\n' }}"
-        owner: root
-        group: '{{ (discovered_cron_allow_status.stat.gr_name == "crontab") | ternary(omit, "root") }}'
+        group: "{{ 'crontab' if 'crontab' in ansible_facts['getent_group'] else 'root' }}"
         mode: 'u-x,g-wx,o-rwx'
