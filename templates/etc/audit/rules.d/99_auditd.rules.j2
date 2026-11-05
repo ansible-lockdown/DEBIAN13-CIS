@@ -2,6 +2,9 @@
 ### YOUR CHANGES WILL BE LOST!
 
 # This template will set all of the auditd configurations via a handler in the role in one task instead of individually
+{% if deb13cis_rule_6_2_3_35 %}
+-c
+{% endif %}
 {% if deb13cis_rule_6_2_3_1 %}
 -a always,exit -F arch=b64 -S all -F path=/etc/sudoers -F perm=wa -k scope
 -a always,exit -F arch=b64 -S all -F dir=/etc/sudoers.d -F perm=wa -k scope
