@@ -43,6 +43,19 @@
     - Audit immutable fact
     - Restart auditd
 
+- name: "POST | AUDITD | Apply auditd template for section 6.2.3.35"
+  when: update_audit_template
+  ansible.builtin.template:
+    src: etc/audit/rules.d/01-initialize.rules.j2
+    dest: /etc/audit/rules.d/01-initialize.rules
+    owner: root
+    group: root
+    mode: 'u-x,g-wx,o-rwx'
+  notify:
+    - Auditd rules reload
+    - Audit immutable fact
+    - Restart auditd
+
 - name: POST | AUDITD | Set up auditd user logging exceptions
   when: deb13cis_allow_auditd_uid_user_exclusions
   ansible.builtin.template:

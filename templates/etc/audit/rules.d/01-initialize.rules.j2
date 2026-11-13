@@ -1,0 +1,7 @@
+{{ file_managed_by_ansible }}
+### YOUR CHANGES WILL BE LOST!
+
+# Loaded first, so the rules files after it keep loading when one rule fails
+{% if deb13cis_rule_6_2_3_35 %}
+-c
+{% endif %}
