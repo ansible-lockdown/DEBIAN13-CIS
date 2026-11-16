@@ -1,6 +1,18 @@
 # Changes to DEB13CIS
 
 ## CIS Benchmark v1.0.0
+## November 2026 - fixes
+
+- 6.2.3.35: -c written to 01-initialize.rules so it loads before every other rules file (addresses https://github.com/ansible-lockdown/DEBIAN13-CIS/pull/25) - Thank you @seven-beep
+- 2.4.1.9: cron.allow group owned by crontab when the group exists, root otherwise (addresses https://github.com/ansible-lockdown/DEBIAN13-CIS/pull/26) - Thank you @seven-beep
+- route flush handlers use sysctl -w, no longer write route.flush to /etc/sysctl.conf
+- 98_auditd_exception.rules.j2 excludes the listed users, was excluding everyone else
+- tmp.mount enabled and unmasked when deb13cis_tmp_svc is true
+- handlers flushed after 5.3.x so a later failure cannot leave pam-auth-update profiles unenabled
+- 1.2.1.1: apt sources converted to deb822 with Signed-By via apt modernize-sources, new deb13cis_apt_modernize_sources toggle
+- 1.2.1.1: warning counted against 1.2.1.1, was 1.1.2.1
+
+## CIS Benchmark v1.0.0
 ## October 2026 - QA fixes
 
 - 2.2.1 nis removal gated on deb13cis_nis_client_required

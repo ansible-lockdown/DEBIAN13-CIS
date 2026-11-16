@@ -1,17 +1,30 @@
 ---
 
-- name: "1.2.1.1 | AUDIT | Ensure the source.list and .source files use the Signed-By option"
+- name: "1.2.1.1 | PATCH | Ensure the source.list and .source files use the Signed-By option"
   when: deb13cis_rule_1_2_1_1
   tags:
     - level1-server
     - level1-workstation
-    - audit
+    - patch
     - rule_1.2.1.1
     - NIST800-53R5_SI-2
   vars:
-    warn_control_id: '1.1.2.1'
+    warn_control_id: '1.2.1.1'
   block:
-    - name: "1.2.1.1 | AUDIT | Ensure the source.list and .source files use the Signed-By option"
+    - name: "1.2.1.1 | PATCH | Ensure the source.list and .source files use the Signed-By option | Convert sources to deb822 with Signed-By"
+      when: deb13cis_apt_modernize_sources
+      ansible.builtin.command: apt -y modernize-sources
+      changed_when: "'All sources are modern' not in discovered_apt_modernize_sources.stdout"
+      register: discovered_apt_modernize_sources
+
+    - name: "1.2.1.1 | PATCH | Ensure the source.list and .source files use the Signed-By option | Confirm apt reads the converted sources"  # noqa no-handler
+      when: discovered_apt_modernize_sources is changed
+      ansible.builtin.apt:
+        update_cache: true
+        lock_timeout: "{{ deb13cis_apt_lock_timeout }}"
+      changed_when: false
+
+    - name: "1.2.1.1 | AUDIT | Ensure the source.list and .source files use the Signed-By option | Discover sources without Signed-By"
       ansible.builtin.shell: |
         set -o pipefail
         grep -PRLs -- '^([^#\n\r]+)?\bSigned-By\b' /etc/apt/sources.list /etc/apt/sources.list.d/*.{list,sources}
@@ -19,14 +32,18 @@
         executable: "{{ deb13cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_apt_signed_by_missing.rc not in [ 0, 1, 2 ]
+      check_mode: false
       register: discovered_apt_signed_by_missing
 
-    - name: "1.2.1.1 | AUDIT | Ensure the source.list and .source files use the Signed-By option"
+    - name: "1.2.1.1 | AUDIT | Ensure the source.list and .source files use the Signed-By option | Warn on sources without Signed-By"
       when: discovered_apt_signed_by_missing.stdout | length > 0
       ansible.builtin.debug:
-        msg: "Warning!! Check apt sources are using Signed-By option for list of source files"
+        msg:
+          - "Warning!! The apt source files below do not use the Signed-By option"
+          - "Please review and update them in accordance with site policy"
+          - "{{ discovered_apt_signed_by_missing.stdout_lines }}"
 
-    - name: "1.2.1.1 | AUDIT | Ensure the source.list and .source files use the Signed-By option"
+    - name: "1.2.1.1 | AUDIT | Ensure the source.list and .source files use the Signed-By option | Warn Count"
       when: discovered_apt_signed_by_missing.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml

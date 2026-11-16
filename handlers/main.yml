@@ -27,6 +27,8 @@
   ansible.builtin.systemd:
     name: tmp.mount
     state: reloaded
+    enabled: true
+    masked: false
     daemon_reload: true
   listen: "Remount /tmp"
 
@@ -162,20 +164,16 @@
   when:
     - deb13cis_flush_ipv4_route
     - not system_is_container
-  ansible.posix.sysctl:
-    name: net.ipv4.route.flush
-    value: '1'
-    sysctl_set: true
+  ansible.builtin.command: sysctl -w net.ipv4.route.flush=1
+  changed_when: true
   ignore_errors: true  # noqa ignore-errors
 
 - name: Sysctl flush ipv6 route table
   when:
     - deb13cis_flush_ipv6_route
     - not system_is_container
-  ansible.posix.sysctl:
-    name: net.ipv6.route.flush
-    value: '1'
-    sysctl_set: true
+  ansible.builtin.command: sysctl -w net.ipv6.route.flush=1
+  changed_when: true
 
 - name: Restart timeservice
   ansible.builtin.systemd:
