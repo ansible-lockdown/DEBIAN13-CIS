@@ -58,7 +58,7 @@
     - name: "Check password set for {{ ansible_facts['env']['SUDO_USER'] }} | password state"  # noqa name[template]
       ansible.builtin.shell: |
         set -o pipefail
-        (grep {{ ansible_facts['env']['SUDO_USER'] }} /etc/shadow || echo 'not found:not found') | awk -F: '{print $2}'
+        awk -F: -v u='{{ ansible_facts['env']['SUDO_USER'] }}' '$1 == u {print $2; f=1} END {if (!f) print "not found"}' /etc/shadow
       args:
         executable: "{{ deb13cis_shell_executable }}"
       changed_when: false
@@ -73,7 +73,9 @@
         msg: "No local account found for {{ ansible_facts['env']['SUDO_USER'] }} user. Skipping local account checks."
 
     - name: "Check local account"
-      when: prelim_ansible_user_password_set.stdout != "not found"
+      when:
+        - prelim_ansible_user_password_set.stdout != "not found"
+        - ansible_facts['env']['SUDO_USER'] not in deb13cis_sudoers_exclude_nopasswd_list
       block:
         - name: "Check password set for {{ ansible_facts['env']['SUDO_USER'] }} | Assert local password set"  # noqa name[template]
           ansible.builtin.assert:

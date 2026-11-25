@@ -11,6 +11,29 @@
 - handlers flushed after 5.3.x so a later failure cannot leave pam-auth-update profiles unenabled
 - 1.2.1.1: apt sources converted to deb822 with Signed-By via apt modernize-sources, new deb13cis_apt_modernize_sources toggle
 - 1.2.1.1: warning counted against 1.2.1.1, was 1.1.2.1
+- 7.2.2: empty-password accounts locked, loop passed a nested list
+- audit immutable handler requests a reboot when -e 2 was already loaded
+- 5.4.3.1: nologin line in /etc/shells commented out, was left as a bare path
+- 5.2.2: Defaults !use_pty in sudoers files changed to use_pty
+- 5.2.6: timestamp_timeout replace matches -1, spaces and decimals
+- 6.1.3.1: lastlog, wtmp and btmp names anchored, failed_when guard on each log file loop
+- 7.2.9: permissions and ACLs only on home directories that exist
+- 5.4.2.7: system accounts selected by UID, new deb13cis_system_users_shell exception list
+- 5.4.2.8, 7.2.2: locked accounts no longer get a home directory created
+- interactive user filters exclude /usr/bin/false and match whole account names
+- 5.4.1.x, 5.4.2.8: user lists matched by line, connecting user from SUDO_USER
+- 5.4.2.2: GID 0 account names anchored
+- 1.1.2.x.1: partition absent warnings fire
+- 1.2.2.1: package cache refreshed before upgrade
+- 2.1.19: nginx-plus removed with nginx
+- 2.1.19: nginx mask service name typo fixed
+- 2.1.4: bind9 mask service name typo fixed
+- 2.1.x: mask tasks only stop and disable services that are installed
+- playbook user shadow check matches the exact account, skipped for NOPASSWD-excluded users
+- 3.1.2: wireless modules only captured when an adapter exists
+- check_mode false on the partition and wireless discovery tasks
+- syver pinned to 0.16.1
+- benchmark vrsion now benchmark_1.0.0 when using audit to mninise disruption for syver work
 
 ## CIS Benchmark v1.0.0
 ## October 2026 - QA fixes

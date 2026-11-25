@@ -19,15 +19,16 @@
       ansible.builtin.command: findmnt -kn "{{ mount_point }}"
       changed_when: false
       failed_when: discovered_tmp_mount.rc not in [ 0, 1 ]
+      check_mode: false
       register: discovered_tmp_mount
 
     - name: "1.1.2.1.1 | PATCH | Ensure /tmp is tmpfs or a separate partition | Absent"
-      when: discovered_tmp_mount is undefined or discovered_tmp_mount.stdout_lines == []
+      when: discovered_tmp_mount.rc == 1
       ansible.builtin.debug:
         msg: "Warning!! {{ mount_point }} is not a separate partition"
 
     - name: "1.1.2.1.1 | PATCH | Ensure /tmp is tmpfs or a separate partition | Present"
-      when: discovered_tmp_mount is undefined or discovered_tmp_mount.stdout_lines == []
+      when: discovered_tmp_mount.rc == 1
       ansible.builtin.import_tasks:
         file: warning_facts.yml
 

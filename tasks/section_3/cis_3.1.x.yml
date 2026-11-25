@@ -28,7 +28,7 @@
 - name: "3.1.2 | PATCH | Ensure wireless interfaces are not available"
   when:
     - deb13cis_rule_3_1_2
-    - prelim_wireless_modules is defined
+    - prelim_wireless_modules.stdout_lines | default([]) | length > 0
   tags:
     - level1-server
     - patch

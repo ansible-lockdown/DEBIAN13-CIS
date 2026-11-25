@@ -86,9 +86,9 @@ post_audit_outfile: "{{ audit_log_dir }}/{{ ansible_facts['hostname'] }}-{{ benc
 
 ### Audit binary settings ###
 audit_bin_version:
-  release: v0.13.0
-  AMD64_checksum: 'sha256:8d1b210b6a9c4e24341e77cde11ed278f809b193a4368b0723e344c04111ae6e'
-  ARM64_checksum: 'sha256:c40886ee66b893276299a320abcd3c56b00b6e343ff5343e67cd3b348390a8a7'
+  release: v0.16.1
+  AMD64_checksum: 'sha256:5a91ce089109d4ee56a55544f69b626e7356c27c2fe1295226f64dd9e1176ada'
+  ARM64_checksum: 'sha256:106f015c330502f3af5119a116a201e6b52ccda794ff731e556448e435af7e4b'
 audit_bin_path: /usr/local/bin/
 audit_bin: "{{ audit_bin_path }}syver"
 audit_format: json
