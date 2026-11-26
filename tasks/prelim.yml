@@ -61,7 +61,7 @@
   tags: always
   ansible.builtin.shell: |
     set -o pipefail
-    grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false" && $7 != "/dev/null") { print $1 }'
+    grep -E -v '^(root|halt|sync|shutdown):' /etc/passwd | awk -F: '($7 !~ /(nologin|false)$/ && $7 != "/dev/null") { print $1 }'
   args:
     executable: "{{ deb13cis_shell_executable }}"
   changed_when: false
@@ -72,7 +72,7 @@
   tags: always
   ansible.builtin.shell: |
     set -o pipefail
-    grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false") { print $6 }'
+    grep -E -v '^(root|halt|sync|shutdown):' /etc/passwd | awk -F: '($7 !~ /(nologin|false)$/ && $7 != "/dev/null") { print $6 }'
   args:
     executable: "{{ deb13cis_shell_executable }}"
   changed_when: false
@@ -83,7 +83,7 @@
   tags: always
   ansible.builtin.shell: |
     set -o pipefail
-    grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false" && $7 != "/dev/null") { print $1":"$3":"$6 }'
+    grep -E -v '^(root|halt|sync|shutdown):' /etc/passwd | awk -F: '($7 !~ /(nologin|false)$/ && $7 != "/dev/null") { print $1":"$3":"$6 }'
   args:
     executable: "{{ deb13cis_shell_executable }}"
   changed_when: false
@@ -186,10 +186,11 @@
         executable: "{{ deb13cis_shell_executable }}"
       changed_when: false
       failed_when: prelim_wireless_adapters.rc not in [ 0, 1 ]
+      check_mode: false
       register: prelim_wireless_adapters
 
     - name: "PRELIM | AUDIT | If wireless adapter present capture module"
-      when: prelim_wireless_adapters.rc == 0
+      when: prelim_wireless_adapters.stdout | length > 0
       ansible.builtin.shell: |
         set -o pipefail
         for driverdir in $(find /sys/class/net/*/ -type d -name wireless | xargs -0 dirname);

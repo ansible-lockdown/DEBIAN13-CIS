@@ -15,8 +15,8 @@
     - NIST800-53R5_IA-5
   ansible.builtin.replace:
     path: /etc/shells
-    regexp: nologin
-    replace: ""
+    regexp: ^([ \t]*[^#\s].*nologin.*)$
+    replace: '# \1'
 
 - name: "5.4.3.2 | PATCH | Ensure default user shell timeout is configured"
   when: deb13cis_rule_5_4_3_2

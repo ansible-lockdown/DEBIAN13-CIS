@@ -42,7 +42,7 @@
     - name: "5.4.2.2 | AUDIT | Ensure root is the only GID 0 account | Get members of gid 0"
       ansible.builtin.shell: |
         set -o pipefail
-        awk -F: '($1 !~ /^(sync|shutdown|halt|operator)/ && $4=="0") {print $1}' /etc/passwd | grep -wv 'root'
+        awk -F: '($1 !~ /^(root|sync|shutdown|halt|operator)$/ && $4=="0") {print $1}' /etc/passwd
       args:
         executable: "{{ deb13cis_shell_executable }}"
       changed_when: false
@@ -220,9 +220,12 @@
 - name: "5.4.2.7 | PATCH | Ensure system accounts do not have a valid login shell"
   when:
     - deb13cis_rule_5_4_2_7
-    - "item.id not in prelim_interactive_usernames.stdout"
-    - "'root' not in item.id"
     - deb13cis_disruption_high
+    - (item.uid | int < prelim_min_int_uid | int) or (item.uid | int == 65534)
+    - item.id not in ['root', 'halt', 'sync', 'shutdown', 'nfsnobody']
+    - item.id not in deb13cis_system_users_shell
+    - item.id != (ansible_user | default(ansible_facts['env']['SUDO_USER'] | default(ansible_facts['env']['USER'])))
+    - item.shell is not search('(nologin|false)$')
   tags:
     - level1-server
     - level1-workstation
@@ -240,13 +243,28 @@
   loop: "{{ prelim_captured_passwd_data }}"
   loop_control:
     label: "{{ item.id }}"
+  register: discovered_system_accounts_set_nologin
+
+- name: "5.4.2.7 | PATCH | Ensure system accounts do not have a valid login shell | Drop accounts set to nologin from the interactive user list"
+  when:
+    - deb13cis_rule_5_4_2_7
+    - deb13cis_disruption_high
+    - discovered_system_accounts_set_nologin.results | default([]) | selectattr('changed') | list | length > 0
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - shadow_suite
+    - rule_5.4.2.7
+  ansible.builtin.set_fact:
+    prelim_interactive_users: "{{ prelim_interactive_users | rejectattr('username', 'in', discovered_system_accounts_set_nologin.results | selectattr('changed') | map(attribute='item.id') | list) | list }}"
 
 - name: "5.4.2.8 | PATCH | Ensure accounts without a valid login shell are locked | Lock accounts"
   when:
     - deb13cis_rule_5_4_2_8
     - deb13cis_disruption_high
-    - "item.id not in prelim_interactive_usernames.stdout"
-    - "'root' not in item.id"
+    - item.id not in prelim_interactive_users | map(attribute='username') | list
+    - item.id != 'root'
   tags:
     - level1-server
     - level1-workstation
@@ -260,6 +278,7 @@
   ansible.builtin.user:
     name: "{{ item.id }}"
     password_lock: true
+    create_home: false
   loop: "{{ prelim_captured_passwd_data }}"
   loop_control:
     label: "{{ item.id }}"

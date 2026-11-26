@@ -260,9 +260,10 @@
 - name: Audit immutable fact
   when:
     - not system_is_container
-    - prelim_auditd_immutable_check is defined
+    - prelim_auditd_immutable_check.rc | default(1) == 0
   ansible.builtin.debug:
     msg: "Reboot required for auditd to apply new rules as immutable set"
+  changed_when: true
   notify: Set reboot required
 
 - name: Stop auditd process

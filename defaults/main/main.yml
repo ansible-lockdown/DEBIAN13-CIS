@@ -40,7 +40,7 @@ deb13cis_legacy_boot: false
 ## Benchmark name used by auditing control role
 # The audit variable found at the base
 ## metadata for Audit benchmark
-benchmark_version: '1.0.0'
+benchmark_version: 'v1.0.0'
 
 benchmark: DEBIAN13-CIS
 
@@ -1022,6 +1022,11 @@ deb13cis_futurepwchgdate_autofix: true
 
 # 5.4.2.6 root umask
 deb13cis_root_umask: '0027'  # 0027 or more restrictive
+## Control 5.4.2.7 - Ensure system accounts do not have a valid login shell
+# System accounts (UID below UID_MIN) on this list keep their shell,
+# e.g. applications that need a shell to function
+deb13cis_system_users_shell: []
+
 ## Control 5.4.3.2 - Configuring user shell timeout
 # This dictionary is related to ensuring the rule about user shell timeout
 # This variable represents the amount of seconds a command or process is allowed to
